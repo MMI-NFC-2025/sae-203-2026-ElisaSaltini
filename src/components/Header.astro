@@ -2,7 +2,10 @@
 import MenuMobile from "./MenuMobile.astro";
 ---
 
-<header class="fixed top-0 left-0 z-[100] w-full bg-primary px-7 pt-12 pb-6">
+<header
+    id="site-header"
+    class="fixed top-0 left-0 z-[100] w-full bg-primary px-7 pt-12 pb-6 transition-transform duration-300 ease-in-out"
+>
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a
@@ -104,14 +107,21 @@ import MenuMobile from "./MenuMobile.astro";
         bottom: auto;
         transform: translateY(-50%) rotate(-45deg);
     }
+
+    .header-hidden {
+        transform: translateY(-100%);
+    }
 </style>
 
 <script>
     //@ts-nocheck
 
+    const header = document.querySelector("#site-header");
     const menuButton = document.querySelector("#menu-button");
     const closeMenuButton = document.querySelector("#close-menu-button");
     const mobileMenu = document.querySelector("#mobile-menu");
+
+    let lastScrollY = window.scrollY;
 
     function openMenu() {
         if (!mobileMenu || !menuButton) {
@@ -147,6 +157,36 @@ import MenuMobile from "./MenuMobile.astro";
         document.body.classList.remove("overflow-hidden");
     }
 
+    function handleHeaderScroll() {
+        if (!header) {
+            return;
+        }
+
+        const currentScrollY = window.scrollY;
+        const menuOpen =
+            mobileMenu && mobileMenu.classList.contains("is-active");
+
+        if (menuOpen) {
+            header.classList.remove("header-hidden");
+            lastScrollY = currentScrollY;
+            return;
+        }
+
+        if (currentScrollY <= 20) {
+            header.classList.remove("header-hidden");
+            lastScrollY = currentScrollY;
+            return;
+        }
+
+        if (currentScrollY > lastScrollY) {
+            header.classList.add("header-hidden");
+        } else {
+            header.classList.remove("header-hidden");
+        }
+
+        lastScrollY = currentScrollY;
+    }
+
     if (menuButton) {
         menuButton.addEventListener("click", openMenu);
     }
@@ -154,4 +194,6 @@ import MenuMobile from "./MenuMobile.astro";
     if (closeMenuButton) {
         closeMenuButton.addEventListener("click", closeMenu);
     }
+
+    window.addEventListener("scroll", handleHeaderScroll);
 </script>
