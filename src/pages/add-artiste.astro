@@ -1,0 +1,289 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import { createArtiste, getScenesByName } from "../../backend/backend.mjs";
+
+const scenes = await getScenesByName();
+
+let messageSucces = "";
+let messageErreur = "";
+
+function formatDateTimeForPocketBase(dateValue) {
+    if (!dateValue) {
+        return "";
+    }
+
+    return `${dateValue.replace("T", " ")}:00`;
+}
+
+if (Astro.request.method === "POST") {
+    try {
+        const formData = await Astro.request.formData();
+
+        const nom = formData.get("Nom")?.toString().trim();
+        const debut = formData.get("Debut_representation")?.toString().trim();
+        const fin = formData.get("Fin_representation")?.toString().trim();
+        const description = formData.get("Description")?.toString().trim();
+        const genre = formData.get("Genre_musical")?.toString().trim();
+        const sceneAssociee = formData.get("Scene_associee")?.toString().trim();
+        const favori = formData.get("Favori")?.toString().trim();
+        const imageArtiste = formData.get("Image_artiste");
+        const galerieArtiste = formData.getAll("Galerie_artiste");
+
+        if (!nom || !debut || !fin || !sceneAssociee || !genre) {
+            messageErreur = "Merci de remplir tous les champs obligatoires.";
+        } else {
+            const data = new FormData();
+
+            data.append("Nom", nom);
+            data.append(
+                "Debut_representation",
+                formatDateTimeForPocketBase(debut),
+            );
+            data.append("Fin_representation", formatDateTimeForPocketBase(fin));
+            data.append("Description", description || "");
+            data.append("Genre_musical", genre);
+            data.append("Scene_associee", sceneAssociee);
+            data.append("Favori", favori === "true" ? "true" : "false");
+
+            if (imageArtiste && imageArtiste.size > 0) {
+                data.append("Image_artiste", imageArtiste);
+            }
+
+            galerieArtiste.forEach((image) => {
+                if (image && image.size > 0) {
+                    data.append("Galerie_artiste", image);
+                }
+            });
+
+            const created = await createArtiste(data);
+
+            if (created) {
+                messageSucces = "L’artiste a bien été ajouté dans PocketBase.";
+            } else {
+                messageErreur =
+                    "L’ajout a échoué. Vérifie surtout la règle Create de la collection Artistes dans PocketBase, puis les noms exacts des champs.";
+            }
+        }
+    } catch (error) {
+        console.log("Une erreur est survenue", error);
+        messageErreur =
+            "Une erreur est survenue pendant l’envoi du formulaire.";
+    }
+}
+---
+
+<Layout titre="Ajouter un artiste">
+    <section class="min-h-screen bg-primary">
+        <Header />
+
+        <section class="px-6 pb-16 pt-[16rem]">
+            <div class="mx-auto w-full max-w-4xl">
+                <div class="text-center">
+                    <h1 class="font-title text-title text-white">
+                        Ajouter un artiste
+                    </h1>
+
+                    <p
+                        class="mx-auto mt-4 max-w-2xl font-text text-body leading-[1.7] text-white/90"
+                    >
+                        Cette page permet d’ajouter un artiste directement dans
+                        PocketBase.
+                    </p>
+                </div>
+
+                {
+                    messageSucces && (
+                        <div class="mx-auto mt-8 max-w-2xl rounded-2xl bg-white px-6 py-4 text-center font-text text-primary shadow-lg">
+                            {messageSucces}
+                        </div>
+                    )
+                }
+
+                {
+                    messageErreur && (
+                        <div class="mx-auto mt-8 max-w-2xl rounded-2xl bg-accent px-6 py-4 text-center font-text text-black shadow-lg">
+                            {messageErreur}
+                        </div>
+                    )
+                }
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="mx-auto mt-10 max-w-3xl rounded-[2rem] bg-primary-light/90 p-6 shadow-[0_12px_30px_rgba(0,0,0,0.18)] md:p-8"
+                >
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div class="md:col-span-2">
+                            <label
+                                for="Nom"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Nom de l’artiste
+                            </label>
+                            <input
+                                id="Nom"
+                                name="Nom"
+                                type="text"
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="Debut_representation"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Début de représentation
+                            </label>
+                            <input
+                                id="Debut_representation"
+                                name="Debut_representation"
+                                type="datetime-local"
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="Fin_representation"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Fin de représentation
+                            </label>
+                            <input
+                                id="Fin_representation"
+                                name="Fin_representation"
+                                type="datetime-local"
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="Genre_musical"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Genre musical
+                            </label>
+                            <select
+                                id="Genre_musical"
+                                name="Genre_musical"
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            >
+                                <option value="">Choisir un genre</option>
+                                <option value="Fanfare">Fanfare</option>
+                                <option value="Musique du monde">
+                                    Musique du monde
+                                </option>
+                                <option value="Jazz">Jazz</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                for="Scene_associee"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Scène associée
+                            </label>
+                            <select
+                                id="Scene_associee"
+                                name="Scene_associee"
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            >
+                                <option value="">Choisir une scène</option>
+                                {
+                                    scenes.map((scene) => (
+                                        <option value={scene.id}>
+                                            {scene.Localisation || scene.Nom}
+                                        </option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+
+                        <div>
+                            <label
+                                for="Favori"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Favori
+                            </label>
+                            <select
+                                id="Favori"
+                                name="Favori"
+                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                            >
+                                <option value="false">Non</option>
+                                <option value="true">Oui</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label
+                                for="Description"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Description
+                            </label>
+                            <textarea
+                                id="Description"
+                                name="Description"
+                                rows="6"
+                                class="mt-2 w-full rounded-xl border-0 bg-white px-4 py-3 font-text text-primary outline-none"
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                for="Image_artiste"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Image principale
+                            </label>
+                            <input
+                                id="Image_artiste"
+                                name="Image_artiste"
+                                type="file"
+                                accept="image/*"
+                                class="mt-2 block w-full rounded-xl bg-white px-4 py-3 font-text text-primary"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="Galerie_artiste"
+                                class="font-text text-body font-medium text-white"
+                            >
+                                Galerie photo
+                            </label>
+                            <input
+                                id="Galerie_artiste"
+                                name="Galerie_artiste"
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                class="mt-2 block w-full rounded-xl bg-white px-4 py-3 font-text text-primary"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-center">
+                        <button
+                            type="submit"
+                            class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                        >
+                            Ajouter l’artiste
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+</Layout>

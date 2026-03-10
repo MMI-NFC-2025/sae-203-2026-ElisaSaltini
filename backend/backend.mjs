@@ -128,16 +128,6 @@ export async function updateArtiste(id, newData) {
     }
 }
 
-export async function createArtiste(newData) {
-    try {
-        const data = await pb.collection("Artistes").create(newData);
-        return data;
-    } catch (error) {
-        console.log("Une erreur est survenue", error);
-        return null;
-    }
-}
-
 
 // 9. Permet d'ajouter ou modifier une scène
 export async function updateScene(id, newData) {
