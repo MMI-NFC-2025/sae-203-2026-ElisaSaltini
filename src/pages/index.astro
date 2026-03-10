@@ -1,10 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
+import HeroHome from "../components/HeroHome.astro";
 ---
 
 <Layout titre="Accueil">
-	<section class="relative min-h-screen bg-primary">
+	<section class="relative">
 		<Header />
+		<HeroHome />
+	</section>
+
+	<section id="contenu-home" class="min-h-screen bg-primary px-6 py-16">
 	</section>
 </Layout>
