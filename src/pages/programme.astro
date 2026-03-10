@@ -1,0 +1,94 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import ProgrammeHero from "../components/ProgrammeHero.astro";
+---
+
+<Layout titre="Programme">
+    <section class="relative">
+        <Header />
+        <ProgrammeHero />
+    </section>
+
+    <section id="programme-content" class="bg-primary px-6 pt-8 pb-16">
+        <div class="mx-auto max-w-md text-center">
+            <div class="mt-6 flex justify-center">
+                <a
+                    href="https://ton-lien-externe-ici.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                >
+                    Télécharger la prog’ ↗
+                </a>
+            </div>
+
+            <div class="mt-16">
+                <h2
+                    class="font-title text-[2.55rem] font-semibold text-center leading-[0.95] text-white"
+                >
+                    Vendredi 26 Juin 2026
+                </h2>
+
+                <p class="mt-8 font-text text-[1.4rem] text-accent">
+                    Scène Place Saint-Martin
+                </p>
+
+                <p class="mt-2 font-text text-body leading-[1.5] text-white">
+                    La Cédille - Ozma - Abigoba -
+                    <br />
+                    Minoritaire - Borruto Family
+                </p>
+            </div>
+
+            <div class="mt-16">
+                <h2
+                    class="font-title text-[2.55rem] font-semibold text-center leading-[0.95] text-white"
+                >
+                    Samedi 27 Juin 
+                    <br />
+                    2026
+                </h2>
+
+                <p class="mt-8 font-text text-[1.4rem] text-accent">
+                    Place Albert Thomas
+                </p>
+
+                <p class="mt-2 font-text text-body leading-[1.5] text-white">
+                    Fanfare les 5 Fantastiques - Batterie
+                    <br />
+                    Fanfare Municipale de Mâcon - Buck
+                    <br />
+                    - Wiho & The Free Radical
+                </p>
+            </div>
+
+            <div class="mt-16">
+                <h2 class="font-title text-[2.55rem] font-semibold text-center leading-[0.95] text-white">
+                    Dimanche 28 Juin 2026
+                </h2>
+
+                <p class="mt-8 font-text text-[1.4rem] text-accent">
+                    Place Denfert Rochereau
+                </p>
+
+                <p class="mt-2 font-text text-body leading-[1.5] text-white">
+                    Ibrahim Maalouf - Émile Parisien -
+                    <br />
+                    Médéric Collignon - Boulou Ferré -
+                    <br />
+                    Louis Sclavis
+                </p>
+            </div>
+
+            <div class="mt-16 flex justify-center">
+                <a
+                    href="/404"
+                    class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                >
+                    Accéder à la billetterie ↗
+                </a>
+            </div>
+        </div>
+    </section>
+</Layout>
