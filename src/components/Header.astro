@@ -2,7 +2,7 @@
 import MenuMobile from "./MenuMobile.astro";
 ---
 
-<header class="absolute top-0 left-0 z-[100] w-full px-7 pt-12">
+<header class="fixed top-0 left-0 z-[100] w-full bg-primary px-7 pt-12 pb-6">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a
@@ -77,11 +77,13 @@ import MenuMobile from "./MenuMobile.astro";
     </div>
 
     <div class="mt-10 flex justify-center">
-        <img
-            src="/svg/logo.svg"
-            alt="Fanfa' Comtoise du 26 au 28 juin"
-            class="w-full max-w-[34rem]"
-        />
+        <a href="/" aria-label="Retour à l'accueil">
+            <img
+                src="/svg/logo.svg"
+                alt="Fanfa' Comtoise du 26 au 28 juin"
+                class="w-full max-w-[34rem]"
+            />
+        </a>
     </div>
 
     <MenuMobile />
