@@ -1,0 +1,127 @@
+---
+const questions = [
+    {
+        titre: "L’accès au festival est-il payant ?",
+        contenu:
+            "Non, l’accès au festival est gratuit. Vous pouvez profiter librement des concerts et des animations proposées dans le centre-ville.",
+    },
+    {
+        titre: "Où se déroulent les concerts ?",
+        contenu:
+            "Les concerts se déroulent sur plusieurs scènes situées dans le centre-ville de Montbéliard, notamment Place Saint-Martin, Place Albert Thomas et Place Denfert Rochereau.",
+    },
+    {
+        titre: "À quelle heure commencent les concerts ?",
+        contenu:
+            "Les horaires varient selon les artistes et les journées. Vous pouvez consulter la page Programme pour connaître les passages précis.",
+    },
+    {
+        titre: "Comment venir au festival ?",
+        contenu:
+            "Vous pouvez venir à pied, en transports en commun, en voiture ou à vélo. Nous vous conseillons de privilégier les déplacements doux et les transports du réseau local.",
+    },
+    {
+        titre: "Y a-t-il des solutions d’hébergement ?",
+        contenu:
+            "Oui, plusieurs hôtels, logements et hébergements sont disponibles autour de Montbéliard. Pensez à réserver à l’avance pendant la période du festival.",
+    },
+    {
+        titre: "Puis-je venir avec des enfants ?",
+        contenu:
+            "Oui, le festival est ouvert à tous et peut être apprécié en famille. Certaines scènes et horaires sont particulièrement adaptés à une sortie avec des enfants.",
+    },
+];
+---
+
+<section id="faq-content" class="bg-primary px-6 pt-5 pb-14">
+    <div class="mx-auto max-w-md">
+        <h2 class="font-title text-title text-center text-white">
+            Les questions fréquentes
+        </h2>
+
+        <div class="mt-7 flex flex-col gap-7">
+            {
+                questions.map((question, index) => (
+                    <article class="accordion-item border-b border-white/90 pb-4">
+                        <button
+                            class="accordion-button flex w-full items-center justify-between gap-4 text-left"
+                            type="button"
+                            data-index={index.toString()}
+                            aria-expanded={index === 0 ? "true" : "false"}
+                        >
+                            <span class="font-text text-subtitle font-normal text-white">
+                                {question.titre}
+                            </span>
+
+                            <span
+                                class={`accordion-icon relative block h-5 w-5 shrink-0 transition-transform duration-300 ${index === 0 ? "rotate-180" : ""}`}
+                            >
+                                <span class="absolute left-1/2 top-1/2 block h-[3px] w-[70%] origin-center -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-white" />
+                                <span class="absolute left-1/2 top-1/2 block h-[3px] w-[70%] origin-center -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-white" />
+                            </span>
+                        </button>
+
+                        <div
+                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-48 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
+                        >
+                            <p class="font-text text-body leading-[1.6] text-white">
+                                {question.contenu}
+                            </p>
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    //@ts-nocheck
+
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+
+    accordionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const item = button.closest(".accordion-item");
+            const content = item?.querySelector(".accordion-content");
+            const icon = item?.querySelector(".accordion-icon");
+
+            if (!item || !content || !icon) {
+                return;
+            }
+
+            const isOpen = button.getAttribute("aria-expanded") === "true";
+
+            const allItems = document.querySelectorAll(".accordion-item");
+
+            allItems.forEach((currentItem) => {
+                const currentButton =
+                    currentItem.querySelector(".accordion-button");
+                const currentContent =
+                    currentItem.querySelector(".accordion-content");
+                const currentIcon =
+                    currentItem.querySelector(".accordion-icon");
+
+                if (!currentButton || !currentContent || !currentIcon) {
+                    return;
+                }
+
+                currentButton.setAttribute("aria-expanded", "false");
+                currentContent.classList.remove(
+                    "max-h-48",
+                    "pt-5",
+                    "opacity-100",
+                );
+                currentContent.classList.add("max-h-0", "pt-0", "opacity-0");
+                currentIcon.classList.remove("rotate-180");
+            });
+
+            if (!isOpen) {
+                button.setAttribute("aria-expanded", "true");
+                content.classList.remove("max-h-0", "pt-0", "opacity-0");
+                content.classList.add("max-h-48", "pt-5", "opacity-100");
+                icon.classList.add("rotate-180");
+            }
+        });
+    });
+</script>
