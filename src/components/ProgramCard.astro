@@ -1,0 +1,20 @@
+---
+const { image, title, date } = Astro.props;
+---
+
+<article class="relative overflow-hidden rounded-3xl shadow-xl">
+    <img src={image} alt={title} class="h-48 w-full object-cover" />
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
+    </div>
+
+    <div class="absolute bottom-4 left-5">
+        <h3 class="font-title text-2xl text-accent">
+            {title}
+        </h3>
+
+        <p class="font-text text-white text-sm">
+            {date}
+        </p>
+    </div>
+</article>

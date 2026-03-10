@@ -1,0 +1,39 @@
+---
+import ProgramCard from "./ProgramCard.astro";
+---
+
+<section id="programme" class="bg-primary px-6 py-16">
+    <h2 class="font-title text-3xl text-center text-white mb-10">
+        Aperçu de La Prog’
+    </h2>
+
+    <div class="space-y-8">
+        <ProgramCard
+            image="/images/image1home.webp"
+            title="Ozma"
+            date="Vendredi 26 Juin 2026"
+        />
+
+        <ProgramCard
+            image="/images/image2home.webp"
+            title="Ibrahim Maalouf"
+            date="Samedi 27 Juin 2026"
+        />
+
+        <ProgramCard
+            image="/images/image3home.webp"
+            title="Buck"
+            date="Dimanche 28 Juin 2026"
+        />
+    </div>
+
+    <div class="flex justify-center mt-10">
+        <a
+            href="/programme"
+            class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+        >
+            Accéder à la prog’
+            <span class="text-lg">↗</span>
+        </a>
+    </div>
+</section>
