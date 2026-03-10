@@ -58,14 +58,20 @@ import MenuMobile from "./MenuMobile.astro";
             <button
                 id="menu-button"
                 aria-label="Ouvrir le menu"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                class="burger-button relative flex h-10 w-10 items-center justify-center rounded-full bg-white"
                 type="button"
             >
-                <img
-                    src="/images/button-menu.webp"
-                    alt=""
-                    class="h-10 w-10 object-contain"
-                />
+                <span class="burger-lines relative block h-5 w-5">
+                    <span
+                        class="burger-line burger-line-1 absolute left-0 top-0.5 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
+                    ></span>
+                    <span
+                        class="burger-line burger-line-2 absolute left-[25%] top-1/2 block h-[2px] w-[75%] -translate-y-1/2 bg-primary transition-all duration-300 ease-in-out"
+                    ></span>
+                    <span
+                        class="burger-line burger-line-3 absolute bottom-0.5 left-0 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
+                    ></span>
+                </span>
             </button>
         </div>
     </div>
@@ -81,15 +87,69 @@ import MenuMobile from "./MenuMobile.astro";
     <MenuMobile />
 </header>
 
+<style>
+    .burger-button.is-active .burger-line-1 {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+    }
+
+    .burger-button.is-active .burger-line-2 {
+        opacity: 0;
+    }
+
+    .burger-button.is-active .burger-line-3 {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) rotate(-45deg);
+    }
+</style>
+
 <script>
     //@ts-nocheck
 
     const menuButton = document.querySelector("#menu-button");
+    const closeMenuButton = document.querySelector("#close-menu-button");
     const mobileMenu = document.querySelector("#mobile-menu");
 
-    if (menuButton && mobileMenu) {
-        menuButton.addEventListener("click", () => {
-            mobileMenu.classList.toggle("hidden");
-        });
+    function openMenu() {
+        if (!mobileMenu || !menuButton) {
+            return;
+        }
+
+        mobileMenu.classList.remove(
+            "pointer-events-none",
+            "translate-x-full",
+            "opacity-0",
+        );
+        mobileMenu.classList.add("is-active");
+        mobileMenu.setAttribute("aria-hidden", "false");
+
+        menuButton.classList.add("is-active");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closeMenu() {
+        if (!mobileMenu || !menuButton) {
+            return;
+        }
+
+        mobileMenu.classList.remove("is-active");
+        mobileMenu.classList.add(
+            "pointer-events-none",
+            "translate-x-full",
+            "opacity-0",
+        );
+        mobileMenu.setAttribute("aria-hidden", "true");
+
+        menuButton.classList.remove("is-active");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    if (menuButton) {
+        menuButton.addEventListener("click", openMenu);
+    }
+
+    if (closeMenuButton) {
+        closeMenuButton.addEventListener("click", closeMenu);
     }
 </script>
