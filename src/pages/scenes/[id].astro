@@ -1,0 +1,162 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ArtistCarousel from "../../components/ArtistCarousel.astro";
+import ArtistCard from "../../components/ArtistCard.astro";
+import {
+    getScene,
+    getImageUrl,
+    getArtistesBySceneId,
+} from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+
+const scene = await getScene(id);
+
+if (!scene) {
+    return Astro.redirect("/scenes");
+}
+
+const artistesScene = await getArtistesBySceneId(id);
+
+let imagePrincipale = null;
+
+if (scene.Image_scene) {
+    imagePrincipale = getImageUrl(scene, scene.Image_scene);
+}
+
+let galerieImages = [];
+
+if (scene.Galerie_scene && scene.Galerie_scene.length > 0) {
+    galerieImages = scene.Galerie_scene.map((image) =>
+        getImageUrl(scene, image),
+    );
+}
+
+const artistesAvecImage = artistesScene.map((artiste) => {
+    let imageUrl = "/images/image1home.webp";
+
+    if (artiste.Image_artiste) {
+        imageUrl = getImageUrl(artiste, artiste.Image_artiste);
+    }
+
+    return {
+        artiste,
+        imageUrl,
+    };
+});
+
+const nomScene = scene.Localisation || scene.Nom;
+---
+
+<Layout titre={nomScene}>
+    <section class="min-h-screen bg-primary">
+        <Header />
+
+        <section class="px-6 pb-14 pt-[16rem] md:pt-[14rem]">
+            <div class="mx-auto w-full max-w-5xl">
+                <a
+                    href="/scenes"
+                    aria-label="Retour à la liste des scènes"
+                    class="flex h-12 w-12 items-center justify-center rounded-full bg-white"
+                >
+                    <span class="relative block h-6 w-6">
+                        <span
+                            class="absolute left-[18%] top-1/2 block h-[3px] w-[65%] -translate-y-1/2 rounded-full bg-primary"
+                        ></span>
+                        <span
+                            class="absolute left-[18%] top-[31%] block h-[3px] w-[45%] -rotate-45 rounded-full bg-primary"
+                        ></span>
+                        <span
+                            class="absolute left-[18%] top-[63%] block h-[3px] w-[45%] rotate-45 rounded-full bg-primary"
+                        ></span>
+                    </span>
+                </a>
+
+                <div class="mt-8 max-w-3xl">
+                    <h1
+                        class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
+                    >
+                        {nomScene}
+                    </h1>
+
+                    {
+                        scene.Nom && (
+                            <p class="mt-6 font-text text-body text-white">
+                                {scene.Nom}
+                            </p>
+                        )
+                    }
+                </div>
+
+                {
+                    imagePrincipale && (
+                        <div class="mt-10 overflow-hidden rounded-[2.2rem]">
+                            <img
+                                src={imagePrincipale}
+                                alt={nomScene}
+                                class="h-72 w-full object-cover md:h-[26rem] lg:h-[32rem]"
+                            />
+                        </div>
+                    )
+                }
+
+                <section class="max-w-3xl pt-12 md:pt-14">
+                    <h2
+                        class="font-text text-[1.75rem] font-semibold text-white"
+                    >
+                        Où se trouve {nomScene} ?
+                    </h2>
+
+                    <p
+                        class="mt-4 font-text text-body leading-[1.75] text-white"
+                    >
+                        {scene.Description_scene}
+                    </p>
+                </section>
+
+                {
+                    artistesAvecImage.length > 0 && (
+                        <section class="pt-12 md:pt-14">
+                            <h2 class="font-text text-title font-semibold text-white">
+                                Les artistes sur cette scène
+                            </h2>
+
+                            <div class="mt-8 grid gap-8 md:grid-cols-2">
+                                {artistesAvecImage.map(
+                                    ({ artiste, imageUrl }) => (
+                                        <ArtistCard
+                                            artiste={artiste}
+                                            imageUrl={imageUrl}
+                                        />
+                                    ),
+                                )}
+                            </div>
+                        </section>
+                    )
+                }
+
+                <section class="pt-12 md:pt-14">
+                    <h2 class="font-text text-title font-semibold text-white">
+                        La Galerie Photo
+                    </h2>
+                </section>
+            </div>
+        </section>
+
+        <ArtistCarousel images={galerieImages} nomArtiste={nomScene} />
+
+        <section class="bg-primary px-6 pb-16 pt-10">
+            <div class="mx-auto w-full max-w-5xl">
+                <div class="flex justify-center">
+                    <a
+                        href="/scenes"
+                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                    >
+                        Retour à la liste des scènes
+                    </a>
+                </div>
+            </div>
+        </section>
+    </section>
+</Layout>
