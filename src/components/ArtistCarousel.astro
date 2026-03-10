@@ -4,61 +4,61 @@ const { images = [], nomArtiste = "" } = Astro.props;
 
 {
     images.length > 0 && (
-        <section class="bg-primary-light px-6 py-8">
-            <div class="mx-auto max-w-md">
-                
-                <div class="relative overflow-hidden rounded-xl">
-                    <div
-                        id="carrousel"
-                        class="flex transition-transform duration-500"
-                        style="width: 100%"
-                    >
-                        {images.map((image, index) => (
-                            <div class="min-w-full flex-shrink-0">
-                                <img
-                                    src={image}
-                                    alt={`${nomArtiste} photo ${index + 1}`}
-                                    class="h-64 w-full object-cover block"
-                                />
-                            </div>
-                        ))}
+        <section class="bg-primary-light px-6 py-8 md:py-10">
+            <div class="mx-auto w-full max-w-5xl">
+                <div class="relative" data-artist-carousel>
+                    <div class="overflow-hidden rounded-xl">
+                        <div
+                            class="flex transition-transform duration-500 ease-out"
+                            data-track
+                        >
+                            {images.map((image, index) => (
+                                <div class="w-full min-w-full flex-shrink-0">
+                                    <img
+                                        src={image}
+                                        alt={`${nomArtiste} photo ${index + 1}`}
+                                        class="h-72 w-full object-cover md:h-[24rem] lg:h-[30rem]"
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <button
-                        id="prev"
-                        class="absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary/50 text-white"
+                        class="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary/60 text-white backdrop-blur-sm"
                         type="button"
-                        aria-label="Image précédente"
+                        aria-label="Image pr&eacute;c&eacute;dente"
+                        data-prev
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                            <path fill-rule="evenodd" d="M11.72 10.28a.75.75 0 0 1 0 1.06l-1.72 1.72H15.75a.75.75 0 0 1 0 1.5H10.06l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M11.72 10.28a.75.75 0 0 1 0 1.06l-1.72 1.72H15.75a.75.75 0 0 1 0 1.5H10.06l1.72 1.72a.75.75 0 1 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
 
                     <button
-                        id="next"
-                        class="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary/50 text-white"
+                        class="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-primary/60 text-white backdrop-blur-sm"
                         type="button"
                         aria-label="Image suivante"
+                        data-next
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                            <path fill-rule="evenodd" d="M12.28 10.28a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H8.25a.75.75 0 0 1 0-1.5h5.69l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
-                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M12.28 10.28a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H8.25a.75.75 0 0 1 0-1.5h5.69l-1.72-1.72a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
-                </div>
 
-                <!-- Dots EN DEHORS du overflow-hidden -->
-                <div class="mt-4 flex justify-center gap-2">
-                    {images.map((_, i) => (
-                        <span
-                            class={`h-3 w-3 rounded-full cursor-pointer transition-colors duration-300 ${i === 0 ? "bg-accent" : "bg-primary"}`}
-                            data-dot={i}
-                        />
-                    ))}
+                    <div class="mt-4 flex justify-center gap-2">
+                        {images.map((_, i) => (
+                            <button
+                                type="button"
+                                class={`h-3 w-3 rounded-full transition-colors duration-300 ${i === 0 ? "bg-accent" : "bg-primary"}`}
+                                data-dot={i}
+                                aria-label={`Voir la photo ${i + 1}`}
+                            ></button>
+                        ))}
+                    </div>
                 </div>
-
             </div>
         </section>
     )
@@ -67,18 +67,29 @@ const { images = [], nomArtiste = "" } = Astro.props;
 <script>
     //@ts-nocheck
 
-    const carrousel = document.getElementById("carrousel");
-    const prev = document.getElementById("prev");
-    const next = document.getElementById("next");
-    const dots = document.querySelectorAll("[data-dot]");
+    const carousels = document.querySelectorAll("[data-artist-carousel]");
 
-    if (carrousel && prev && next) {
+    carousels.forEach((carousel) => {
+        const track = carousel.querySelector("[data-track]");
+        const prev = carousel.querySelector("[data-prev]");
+        const next = carousel.querySelector("[data-next]");
+        const dots = carousel.querySelectorAll("[data-dot]");
+
+        if (!track || !prev || !next) {
+            return;
+        }
+
+        const total = track.children.length;
         let current = 0;
-        const total = carrousel.children.length;
+
+        if (total <= 1) {
+            prev.classList.add("hidden");
+            next.classList.add("hidden");
+        }
 
         function goTo(index) {
             current = (index + total) % total;
-            carrousel.style.transform = `translateX(-${current * 100}%)`;
+            track.style.transform = `translateX(-${current * 100}%)`;
 
             dots.forEach((dot, i) => {
                 dot.classList.toggle("bg-accent", i === current);
@@ -88,5 +99,11 @@ const { images = [], nomArtiste = "" } = Astro.props;
 
         prev.addEventListener("click", () => goTo(current - 1));
         next.addEventListener("click", () => goTo(current + 1));
-    }
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener("click", () => goTo(index));
+        });
+
+        goTo(0);
+    });
 </script>

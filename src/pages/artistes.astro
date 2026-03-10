@@ -38,12 +38,12 @@ const artistesAvecImage = artistesFiltres.map((artiste) => {
     </section>
 
     <section id="liste-artistes" class="bg-primary px-6 pt-8 pb-16">
-        <div class="mx-auto max-w-md">
+        <div class="mx-auto w-full max-w-5xl">
             <h2 class="font-title text-title text-center text-white">
                 La liste des artistes
             </h2>
 
-            <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-4">
                 <a
                     href="/artistes?jour=2026-06-26"
                     class={`flex min-h-[7rem] items-center justify-center rounded-[1.4rem] px-4 text-center font-text text-[1.1rem] font-semibold leading-[1.2] transition ${
@@ -97,7 +97,7 @@ const artistesAvecImage = artistesFiltres.map((artiste) => {
                 </a>
             </div>
 
-            <div class="mt-10 space-y-8">
+            <div class="mt-10 grid gap-8 md:grid-cols-2">
                 {
                     artistesAvecImage.map(({ artiste, imageUrl }) => (
                         <ArtistCard artiste={artiste} imageUrl={imageUrl} />
