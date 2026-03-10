@@ -1,0 +1,130 @@
+---
+const infos = [
+    {
+        titre: "Nos Tarifs",
+        contenu:
+            "Gratuit comme l’air : pas besoin de portefeuille pour entrer !",
+    },
+    {
+        titre: "Les Hébergements",
+        contenu:
+            "Pas de lieu pour dormir, juste pour danser. Organisez votre retour !",
+    },
+    {
+        titre: "Les Transports",
+        contenu:
+            "Transport easy : une navette spéciale s’ajoute au réseau Évolity pour l’occasion !",
+    },
+    {
+        titre: "FAQ",
+        contenu:
+            "La FAQ : tout ce qu’il faut savoir en un clin d’œil. Accédez aux questions-réponses ICI",
+    },
+];
+---
+
+<section class="bg-primary px-6 pt-5 pb-14">
+    <div class="mx-auto max-w-md">
+        <h2 class="font-title text-title text-center text-white">
+            Les infos pratiques
+        </h2>
+
+        <div class="mt-7 flex flex-col gap-7">
+            {
+                infos.map((info, index) => (
+                    <article class="accordion-item border-b border-white/90 pb-4">
+                        <button
+                            class="accordion-button flex w-full items-center justify-between gap-4 text-left"
+                            type="button"
+                            data-index={index.toString()}
+                            aria-expanded={index === 0 ? "true" : "false"}
+                        >
+                            <span class="font-text text-subtitle font-normal text-white">
+                                {info.titre}
+                            </span>
+
+                            <span
+                                class={`accordion-icon relative block h-5 w-5 shrink-0 transition-transform duration-300 ${index === 0 ? "rotate-180" : ""}`}
+                            >
+                                <span class="absolute left-1/2 top-1/2 block h-[3px] w-[70%] origin-center -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full bg-white" />
+                                <span class="absolute left-1/2 top-1/2 block h-[3px] w-[70%] origin-center -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-white" />
+                            </span>
+                        </button>
+
+                        <div
+                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-40 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
+                        >
+                            {info.titre === "FAQ" ? (
+                                <p class="font-text text-body leading-[1.6] text-white">
+                                    La FAQ : tout ce qu’il faut savoir en un
+                                    clin d’œil. Accédez aux{" "}
+                                    <a
+                                        href="/faq"
+                                        class="underline underline-offset-2"
+                                    >
+                                        questions-réponses ICI
+                                    </a>
+                                </p>
+                            ) : (
+                                <p class="font-text text-body leading-[1.6] text-white">
+                                    {info.contenu}
+                                </p>
+                            )}
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    //@ts-nocheck
+
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+
+    accordionButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const item = button.closest(".accordion-item");
+            const content = item?.querySelector(".accordion-content");
+            const icon = item?.querySelector(".accordion-icon");
+
+            if (!item || !content || !icon) {
+                return;
+            }
+
+            const isOpen = button.getAttribute("aria-expanded") === "true";
+
+            const allItems = document.querySelectorAll(".accordion-item");
+
+            allItems.forEach((currentItem) => {
+                const currentButton =
+                    currentItem.querySelector(".accordion-button");
+                const currentContent =
+                    currentItem.querySelector(".accordion-content");
+                const currentIcon =
+                    currentItem.querySelector(".accordion-icon");
+
+                if (!currentButton || !currentContent || !currentIcon) {
+                    return;
+                }
+
+                currentButton.setAttribute("aria-expanded", "false");
+                currentContent.classList.remove(
+                    "max-h-40",
+                    "pt-5",
+                    "opacity-100",
+                );
+                currentContent.classList.add("max-h-0", "pt-0", "opacity-0");
+                currentIcon.classList.remove("rotate-180");
+            });
+
+            if (!isOpen) {
+                button.setAttribute("aria-expanded", "true");
+                content.classList.remove("max-h-0", "pt-0", "opacity-0");
+                content.classList.add("max-h-40", "pt-5", "opacity-100");
+                icon.classList.add("rotate-180");
+            }
+        });
+    });
+</script>

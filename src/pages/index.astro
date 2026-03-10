@@ -3,15 +3,17 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import HeroHome from "../components/HeroHome.astro";
 import ProgramPreview from "../components/ProgramPreview.astro";
+import PartnersSection from "../components/PartnersSection.astro";
+import InfosPratiques from "../components/InfosPratiques.astro";
 ---
 
 <Layout titre="Accueil">
 	<section class="relative">
 		<Header />
 		<HeroHome />
-		<ProgramPreview />
 	</section>
 
-	<section id="contenu-home" class="min-h-screen bg-primary px-6 py-16">
-	</section>
+	<ProgramPreview />
+	<PartnersSection />
+	<InfosPratiques />
 </Layout>

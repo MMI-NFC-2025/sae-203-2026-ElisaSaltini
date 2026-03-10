@@ -1,0 +1,36 @@
+---
+const partenaires = [
+    { nom: "Ville de Montbéliard", image: "/svg/montbeliard-ville.svg" },
+    { nom: "Pays de Montbéliard Agglomération", image: "/svg/pma.svg" },
+    { nom: "FC Sochaux", image: "/svg/sochaux.svg" },
+    { nom: "Région Bourgogne Franche-Comté", image: "/svg/france3.svg" },
+    { nom: "Conservatoire de musique", image: "/svg/cnm.svg" },
+    { nom: "L'Est Républicain", image: "/svg/est-rep.svg" },
+    { nom: "Bourgogne Franche-Comté", image: "/svg/bfc.svg" },
+    { nom: "Université Marie et Louis Pasteur", image: "/svg/univ.svg" },
+    { nom: "Spotify", image: "/svg/spotify.svg" },
+    { nom: "Evolity", image: "/svg/evolity.svg" },
+];
+---
+
+<section class="bg-primary px-6 pt-0 pb-14">
+    <div class="mx-auto max-w-md">
+        <h2 class="font-title text-title text-center text-white">
+            Nos partenaires
+        </h2>
+
+        <div class="mt-6 grid grid-cols-2 gap-x-7 gap-y-6">
+            {
+                partenaires.map((partenaire) => (
+                    <article class="flex h-[5.6rem] items-center justify-center rounded-lg bg-primary-light px-4">
+                        <img
+                            src={partenaire.image}
+                            alt={partenaire.nom}
+                            class="max-h-[3.8rem] w-auto object-contain"
+                        />
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>
