@@ -1,0 +1,45 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ScenesHero from "../../components/ScenesHero.astro";
+import SceneCard from "../../components/SceneCard.astro";
+import { getScenesByName, getImageUrl } from "../../../backend/backend.mjs";
+
+const toutesLesScenes = await getScenesByName();
+
+const scenesAvecImage = toutesLesScenes.map((scene) => {
+    let imageUrl = "/images/hero.webp";
+
+    if (scene.Image_scene) {
+        imageUrl = getImageUrl(scene, scene.Image_scene);
+    }
+
+    return {
+        scene,
+        imageUrl,
+    };
+});
+---
+
+<Layout titre="Les scènes">
+    <section class="relative">
+        <Header />
+        <ScenesHero />
+    </section>
+
+    <section id="liste-scenes" class="bg-primary px-6 pt-8 pb-16">
+        <div class="mx-auto w-full max-w-5xl">
+            <h2 class="font-title text-title text-center text-white">
+                La liste des scènes
+            </h2>
+
+            <div class="mt-10 grid gap-8 md:grid-cols-2">
+                {
+                    scenesAvecImage.map(({ scene, imageUrl }) => (
+                        <SceneCard scene={scene} imageUrl={imageUrl} />
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+</Layout>

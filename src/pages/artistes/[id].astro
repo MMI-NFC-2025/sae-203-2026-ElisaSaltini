@@ -41,9 +41,20 @@ function formatDateFr(dateString) {
     });
 }
 
+function formatHeureFr(dateString) {
+    if (!dateString) {
+        return "";
+    }
+
+    const heure = dateString.slice(11, 16);
+    return heure;
+}
+
 const dateAffichee = formatDateFr(artiste.Debut_representation);
 const dateCapitalisee =
     dateAffichee.charAt(0).toUpperCase() + dateAffichee.slice(1);
+
+const heurePassage = formatHeureFr(artiste.Debut_representation);
 
 const nomScene =
     artiste.expand?.Scene_associee?.Localisation ||
@@ -59,7 +70,7 @@ const nomScene =
             <div class="mx-auto w-full max-w-5xl">
                 <a
                     href="/artistes"
-                    aria-label="Retour &agrave; la liste des artistes"
+                    aria-label="Retour à la liste des artistes"
                     class="flex h-12 w-12 items-center justify-center rounded-full bg-white"
                 >
                     <span class="relative block h-6 w-6">
@@ -76,7 +87,9 @@ const nomScene =
                 </a>
 
                 <div class="mt-8 max-w-3xl">
-                    <h1 class="font-text text-[3rem] font-semibold leading-[1.08] text-white">
+                    <h1
+                        class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
+                    >
                         {artiste.Nom}
                     </h1>
 
@@ -84,8 +97,16 @@ const nomScene =
                         Le {dateCapitalisee}
                     </p>
 
+                    {
+                        heurePassage && (
+                            <p class="mt-2 font-text text-body text-white">
+                                À {heurePassage}
+                            </p>
+                        )
+                    }
+
                     <p class="mt-2 font-text text-body text-white">
-                        Sur la sc&egrave;ne {nomScene}
+                        Sur la scène {nomScene}
                     </p>
                 </div>
 
@@ -132,7 +153,7 @@ const nomScene =
                         href="/artistes"
                         class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
                     >
-                        Retour &agrave; la liste des artistes
+                        Retour à la liste des artistes
                     </a>
                 </div>
             </div>

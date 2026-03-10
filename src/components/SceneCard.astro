@@ -1,0 +1,28 @@
+---
+const { scene, imageUrl } = Astro.props;
+
+const titre = scene.Localisation || scene.Nom;
+---
+
+<article class="relative overflow-hidden rounded-3xl shadow-xl">
+    <a
+        href={`/scenes/${scene.id}`}
+        aria-label={`Voir le détail de ${titre}`}
+        class="block"
+    >
+        <img src={imageUrl} alt={titre} class="h-48 w-full object-cover" />
+
+        <div
+            class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"
+        >
+        </div>
+
+        <div class="absolute bottom-4 left-5 right-5">
+            <h3
+                class="font-title text-2xl leading-[1.05] text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.35)]"
+            >
+                {titre}
+            </h3>
+        </div>
+    </a>
+</article>
