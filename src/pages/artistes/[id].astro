@@ -1,0 +1,146 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import ArtistCarousel from "../../components/ArtistCarousel.astro";
+import { getArtiste, getImageUrl } from "../../../backend/backend.mjs";
+
+const { id } = Astro.params;
+
+const artiste = await getArtiste(id);
+
+if (!artiste) {
+    return Astro.redirect("/artistes");
+}
+
+let imagePrincipale = null;
+
+if (artiste.Image_artiste) {
+    imagePrincipale = getImageUrl(artiste, artiste.Image_artiste);
+}
+
+let galerieImages = [];
+
+if (artiste.Galerie_artiste && artiste.Galerie_artiste.length > 0) {
+    galerieImages = artiste.Galerie_artiste.map((image) =>
+        getImageUrl(artiste, image),
+    );
+}
+
+function formatDateFr(dateString) {
+    if (!dateString) {
+        return "";
+    }
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("fr-FR", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+    });
+}
+
+const dateAffichee = formatDateFr(artiste.Debut_representation);
+const dateCapitalisee =
+    dateAffichee.charAt(0).toUpperCase() + dateAffichee.slice(1);
+
+const nomScene =
+    artiste.expand?.Scene_associee?.Localisation ||
+    artiste.expand?.Scene_associee?.Nom ||
+    "";
+---
+
+<Layout titre={artiste.Nom}>
+    <section class="min-h-screen bg-primary">
+        <Header />
+
+        <section class="px-6 pt-[20rem] pb-14">
+            <div class="mx-auto max-w-md">
+                <a
+                    href="/artistes"
+                    aria-label="Retour à la liste des artistes"
+                    class="flex h-12 w-12 items-center justify-center rounded-full bg-white"
+                >
+                    <span class="relative block h-6 w-6">
+                        <span
+                            class="absolute left-[18%] top-1/2 block h-[3px] w-[65%] -translate-y-1/2 rounded-full bg-primary"
+                        ></span>
+                        <span
+                            class="absolute left-[18%] top-[31%] block h-[3px] w-[45%] -rotate-45 rounded-full bg-primary"
+                        ></span>
+                        <span
+                            class="absolute left-[18%] top-[63%] block h-[3px] w-[45%] rotate-45 rounded-full bg-primary"
+                        ></span>
+                    </span>
+                </a>
+
+                <div class="mt-0">
+                    <h1
+                        class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
+                        "
+                    >
+                        {artiste.Nom}
+                    </h1>
+
+                    <p
+                    <p class="mt-6 font-text text-subtile text-white"
+                    >
+                        Le {dateCapitalisee}
+                    </p>
+
+                    <p class="mt-2 font-text text-subtile text-white">
+                        Sur la scène {nomScene}
+                    </p>
+                </div>
+
+                {
+                    imagePrincipale && (
+                        <div class="mt-10 overflow-hidden rounded-[2.2rem]">
+                            <img
+                                src={imagePrincipale}
+                                alt={artiste.Nom}
+                                class="h-[17rem] w-full object-cover"
+                            />
+                        </div>
+                    )
+                }
+
+                <section class="pt-16">
+                    <h2
+                        class="font-text text-[1.75rem] font-semibold text-white"
+                    >
+                        Qui est {artiste.Nom} ?
+                    </h2>
+
+                    <p
+                        class="mt-4 font-text text-body leading-[1.75] text-white"
+                    >
+                        {artiste.Description}
+                    </p>
+                </section>
+
+                <section class="pt-16">
+                    <h2 class="font-text text-title font-semibold text-white">
+                        La Galeries Photo
+                    </h2>
+                </section>
+            </div>
+        </section>
+
+        <ArtistCarousel images={galerieImages} nomArtiste={artiste.Nom} />
+
+        <section class="bg-primary px-6 pt-10 pb-16">
+            <div class="mx-auto max-w-md">
+                <div class="flex justify-center">
+                    <a
+                        href="/artistes"
+                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                    >
+                        Retour à la liste des artistes ↗
+                    </a>
+                </div>
+            </div>
+        </section>
+    </section>
+</Layout>
