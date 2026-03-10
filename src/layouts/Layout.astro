@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
 
 const { titre } = Astro.props;
 ---
@@ -12,7 +13,6 @@ const { titre } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-
 		<title>{titre}</title>
 	</head>
 
@@ -20,5 +20,7 @@ const { titre } = Astro.props;
 		<main>
 			<slot />
 		</main>
+
+		<Footer />
 	</body>
 </html>
