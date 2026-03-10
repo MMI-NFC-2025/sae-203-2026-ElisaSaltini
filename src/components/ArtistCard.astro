@@ -1,0 +1,19 @@
+---
+const { artiste, imageUrl } = Astro.props;
+---
+
+<article class="overflow-hidden bg-white p-3 shadow-md">
+    <a href={`/artistes/${artiste.id}`} class="block">
+        <img
+            src={imageUrl}
+            alt={artiste.Nom}
+            class="h-40 w-full object-cover"
+        />
+
+        <div class="px-2 py-4 text-center">
+            <h3 class="font-title text-subtitle text-primary">
+                {artiste.Nom}
+            </h3>
+        </div>
+    </a>
+</article>

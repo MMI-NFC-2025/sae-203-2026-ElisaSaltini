@@ -21,7 +21,7 @@ const SCENE_1_NAME = "Scène 1";
 
 
 // --- Test 1 : Artistes triés par date ---
-/*console.log("\n=== 1. Artistes triés par date ===");
+console.log("\n=== 1. Artistes triés par date ===");
 try {
     const artistes = await getArtistesByDate();
 
@@ -36,11 +36,11 @@ try {
     );
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 2 : Scènes triées par nom ---
-/*console.log("\n=== 2. Scènes triées par nom ===");
+console.log("\n=== 2. Scènes triées par nom ===");
 try {
     const scenes = await getScenesByName();
 
@@ -53,11 +53,11 @@ try {
     );
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 3 : Artistes triés par ordre alphabétique ---
-/*console.log("\n=== 3. Artistes par ordre alphabétique ===");
+console.log("\n=== 3. Artistes par ordre alphabétique ===");
 try {
     const artistes = await getArtistesByName();
 
@@ -71,11 +71,11 @@ try {
     );
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 4 : Infos d'un artiste par id ---
-/*console.log("\n=== 4. Infos artiste par id ===");
+console.log("\n=== 4. Infos artiste par id ===");
 try {
     const artiste = await getArtiste(ARTISTE_ID);
 
@@ -87,11 +87,11 @@ try {
     console.log("Scène :", artiste.expand?.Scene_associee?.Nom);
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 5 : Infos d'une scène par id ---
-/*console.log("\n=== 5. Infos scène par id ===");
+console.log("\n=== 5. Infos scène par id ===");
 try {
     const scene = await getScene(SCENE_1_ID);
 
@@ -101,11 +101,11 @@ try {
     console.log("Description :", scene.Description_scene);
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 6 : Artistes d'une scène par id ---
-/*console.log("\n=== 6. Artistes par scène (id) ===");
+console.log("\n=== 6. Artistes par scène (id) ===");
 try {
     const artistes = await getArtistesBySceneId(SCENE_1_ID);
 
@@ -121,11 +121,11 @@ try {
     );
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 7 : Artistes d'une scène par nom ---
-/*console.log("\n=== 7. Artistes par scène (nom) ===");
+console.log("\n=== 7. Artistes par scène (nom) ===");
 try {
     const artistes = await getArtistesBySceneName(SCENE_1_NAME);
 
@@ -141,11 +141,11 @@ try {
     );
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 8 : Modifier un artiste (toggle favori) ---
-/*console.log("\n=== 8. Modifier un artiste (favori) ===");
+console.log("\n=== 8. Modifier un artiste (favori) ===");
 try {
     const artiste = await getArtiste(ARTISTE_ID);
     const avant = artiste.Favori;
@@ -164,11 +164,11 @@ try {
     console.log("(remis à la valeur initiale)");
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 9 : Modifier une scène ---
-/*console.log("\n=== 9. Modifier une scène ===");
+console.log("\n=== 9. Modifier une scène ===");
 try {
     const scene = await getScene(SCENE_1_ID);
     const avant = scene.Description_scene;
@@ -187,11 +187,11 @@ try {
     console.log("(remis à la valeur initiale)");
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 10 : Créer un artiste de test ---
-/*console.log("\n=== 10. Créer un artiste de test ===");
+console.log("\n=== 10. Créer un artiste de test ===");
 try {
     const newArtiste = await createArtiste({
         Nom: "Artiste Test",
@@ -210,11 +210,11 @@ try {
     }
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 11 : Créer une scène de test ---
-/*console.log("\n=== 11. Créer une scène de test ===");
+console.log("\n=== 11. Créer une scène de test ===");
 try {
     const newScene = await createScene({
         Nom: "Scène Test",
@@ -228,11 +228,11 @@ try {
     }
 } catch (e) {
     console.error(e);
-}*/
+}
 
 
 // --- Test 12 : URL image artiste ---
-/*console.log("\n=== 12. Test URL image ===");
+console.log("\n=== 12. Test URL image ===");
 try {
     const artiste = await getArtiste(ARTISTE_ID);
 
@@ -244,4 +244,4 @@ try {
     }
 } catch (e) {
     console.error(e);
-}*/
+}
