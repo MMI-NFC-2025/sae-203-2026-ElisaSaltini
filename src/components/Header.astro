@@ -1,0 +1,95 @@
+---
+import MenuMobile from "./MenuMobile.astro";
+---
+
+<header class="absolute top-0 left-0 z-40 w-full px-7 pt-12">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a
+                href="/404"
+                aria-label="Instagram"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+            >
+                <img
+                    src="/images/button-insta.webp"
+                    alt=""
+                    class="h-10 w-10 object-contain"
+                />
+            </a>
+
+            <a
+                href="/404"
+                aria-label="Facebook"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+            >
+                <img
+                    src="/images/button-facebook.webp"
+                    alt=""
+                    class="h-10 w-10 object-contain"
+                />
+            </a>
+
+            <a
+                href="/404"
+                aria-label="TikTok"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+            >
+                <img
+                    src="/images/button-tiktok.webp"
+                    alt=""
+                    class="h-10 w-10 object-contain"
+                />
+            </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a
+                href="/404"
+                aria-label="Billetterie"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+            >
+                <img
+                    src="/images/button-ticket.webp"
+                    alt=""
+                    class="h-10 w-10 object-contain"
+                />
+            </a>
+
+            <button
+                id="menu-button"
+                aria-label="Ouvrir le menu"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                type="button"
+            >
+                <img
+                    src="/images/button-menu.webp"
+                    alt=""
+                    class="h-10 w-10 object-contain"
+                />
+            </button>
+        </div>
+    </div>
+
+    <div class="mt-10 flex justify-center">
+        <img
+            src="/svg/logo.svg"
+            alt="Fanfa' Comtoise du 26 au 28 juin"
+            class="w-full max-w-[34rem]"
+        />
+    </div>
+
+    <MenuMobile />
+</header>
+
+<script>
+    //@ts-nocheck
+
+    const menuButton = document.querySelector("#menu-button");
+    const mobileMenu = document.querySelector("#mobile-menu");
+
+    if (menuButton && mobileMenu) {
+        menuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+    }
+</script>
