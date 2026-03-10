@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+---
+
+<Layout titre="404 - Page introuvable">
+    <section class="relative min-h-screen bg-primary">
+        <Header />
+
+
+
+        <div
+            class="flex min-h-screen flex-col items-center justify-center px-6 text-center"
+        >
+            <h1 class="font-title text-[6rem] leading-none text-white">404</h1>
+
+            <h2 class="font-title mt-6 text-title text-white">
+                Oups... cette page n'existe pas
+            </h2>
+
+            <p class="font-text mt-4 max-w-md text-body text-white">
+                La page que vous cherchez semble introuvable. Peut-être qu’elle
+                s’est perdue entre deux fanfares.
+            </p>
+
+            <a
+                href="/"
+                class="mt-10 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+            >
+                Retour à l'accueil
+                <span class="text-lg">↗</span>
+            </a>
+        </div>
+    </section>
+</Layout>
