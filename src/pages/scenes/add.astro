@@ -3,14 +3,46 @@ import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import { createScene } from "../../../backend/backend.mjs";
 
+const ACCESS_COOKIE_NAME = "mmi_add_access";
+const EMAIL_COOKIE_NAME = "mmi_add_email";
+
 let messageSucces = "";
 let messageErreur = "";
+let messageInfo = "";
+
+let connectedEmail = Astro.cookies.get(EMAIL_COOKIE_NAME)?.value || "";
+let isConnected =
+    Astro.cookies.get(ACCESS_COOKIE_NAME)?.value === "1" &&
+    connectedEmail.length > 0;
+
+const valeursConnexion = {
+    email: connectedEmail,
+};
 
 const valeursFormulaire = {
     Nom: "",
     Localisation: "",
     Description_scene: "",
 };
+
+function setAccessCookies(email) {
+    Astro.cookies.set(ACCESS_COOKIE_NAME, "1", {
+        path: "/",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 12,
+    });
+
+    Astro.cookies.set(EMAIL_COOKIE_NAME, email, {
+        path: "/",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 12,
+    });
+}
+
+function clearAccessCookies() {
+    Astro.cookies.delete(ACCESS_COOKIE_NAME, { path: "/" });
+    Astro.cookies.delete(EMAIL_COOKIE_NAME, { path: "/" });
+}
 
 function buildErrorMessage(error) {
     const baseMessage = error?.message?.toString().trim();
@@ -27,54 +59,80 @@ function buildErrorMessage(error) {
 }
 
 if (Astro.request.method === "POST") {
-    try {
-        const formData = await Astro.request.formData();
+    const formData = await Astro.request.formData();
+    const actionType = formData.get("actionType")?.toString();
 
-        valeursFormulaire.Nom = formData.get("Nom")?.toString().trim() || "";
-        valeursFormulaire.Localisation =
-            formData.get("Localisation")?.toString().trim() || "";
-        valeursFormulaire.Description_scene =
-            formData.get("Description_scene")?.toString().trim() || "";
+    if (actionType === "login") {
+        const email = formData.get("email")?.toString().trim().toLowerCase() || "";
+        const password = formData.get("password")?.toString() || "";
+        valeursConnexion.email = email;
 
-        const imageScene = formData.get("Image_scene");
-        const galerieScene = formData.getAll("Galerie_scene");
-
-        if (!valeursFormulaire.Nom || !valeursFormulaire.Localisation) {
-            messageErreur = "Merci de remplir tous les champs obligatoires.";
+        if (!email || !password) {
+            messageErreur = "Merci de saisir un email et un mot de passe.";
         } else {
-            const payload = {
-                Nom: valeursFormulaire.Nom,
-                Localisation: valeursFormulaire.Localisation,
-                Description_scene: valeursFormulaire.Description_scene,
-            };
+            setAccessCookies(email);
+            connectedEmail = email;
+            isConnected = true;
+            messageInfo = "Connexion reussie. Vous pouvez maintenant ajouter une scene.";
+        }
+    } else if (actionType === "logout") {
+        clearAccessCookies();
+        connectedEmail = "";
+        valeursConnexion.email = "";
+        isConnected = false;
+        messageInfo = "Vous etes deconnecte.";
+    } else if (actionType === "add") {
+        if (!isConnected) {
+            messageErreur = "Acces bloque: connectez-vous pour utiliser ce formulaire.";
+        } else {
+            try {
+                valeursFormulaire.Nom = formData.get("Nom")?.toString().trim() || "";
+                valeursFormulaire.Localisation =
+                    formData.get("Localisation")?.toString().trim() || "";
+                valeursFormulaire.Description_scene =
+                    formData.get("Description_scene")?.toString().trim() || "";
 
-            if (imageScene instanceof File && imageScene.size > 0) {
-                payload.Image_scene = imageScene;
-            }
+                const imageScene = formData.get("Image_scene");
+                const galerieScene = formData.getAll("Galerie_scene");
 
-            const galerieValide = galerieScene.filter(
-                (entry) => entry instanceof File && entry.size > 0,
-            );
+                if (!valeursFormulaire.Nom || !valeursFormulaire.Localisation) {
+                    messageErreur = "Merci de remplir tous les champs obligatoires.";
+                } else {
+                    const payload = {
+                        Nom: valeursFormulaire.Nom,
+                        Localisation: valeursFormulaire.Localisation,
+                        Description_scene: valeursFormulaire.Description_scene,
+                    };
 
-            if (galerieValide.length > 0) {
-                payload.Galerie_scene = galerieValide;
-            }
+                    if (imageScene instanceof File && imageScene.size > 0) {
+                        payload.Image_scene = imageScene;
+                    }
 
-            const created = await createScene(payload);
+                    const galerieValide = galerieScene.filter(
+                        (entry) => entry instanceof File && entry.size > 0,
+                    );
 
-            if (created?.id) {
-                messageSucces = "La scene a bien ete ajoutee dans PocketBase.";
-                valeursFormulaire.Nom = "";
-                valeursFormulaire.Localisation = "";
-                valeursFormulaire.Description_scene = "";
-            } else {
-                messageErreur =
-                    "L'ajout a echoue. Verifie les champs et la Create rule.";
+                    if (galerieValide.length > 0) {
+                        payload.Galerie_scene = galerieValide;
+                    }
+
+                    const created = await createScene(payload);
+
+                    if (created?.id) {
+                        messageSucces = "La scene a bien ete ajoutee dans PocketBase.";
+                        valeursFormulaire.Nom = "";
+                        valeursFormulaire.Localisation = "";
+                        valeursFormulaire.Description_scene = "";
+                    } else {
+                        messageErreur =
+                            "L'ajout a echoue. Verifie les champs et la Create rule.";
+                    }
+                }
+            } catch (error) {
+                console.log("Une erreur est survenue pendant la creation", error);
+                messageErreur = buildErrorMessage(error);
             }
         }
-    } catch (error) {
-        console.log("Une erreur est survenue pendant la creation", error);
-        messageErreur = buildErrorMessage(error);
     }
 }
 ---
@@ -103,8 +161,8 @@ if (Astro.request.method === "POST") {
                     <p
                         class="mx-auto mt-4 max-w-2xl font-text text-body leading-[1.7] text-white/90"
                     >
-                        Cette page envoie un formulaire POST vers PocketBase pour
-                        creer un enregistrement dans la collection Scenes.
+                        Espace reserve au formulaire d'ajout. Connectez-vous
+                        d'abord pour acceder au formulaire.
                     </p>
                 </div>
 
@@ -117,6 +175,14 @@ if (Astro.request.method === "POST") {
                 }
 
                 {
+                    messageInfo && (
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/25 bg-primary-light/40 px-6 py-4 text-center font-text text-white shadow-lg">
+                            {messageInfo}
+                        </div>
+                    )
+                }
+
+                {
                     messageErreur && (
                         <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-red-400/60 bg-red-100 px-6 py-4 text-center font-text text-red-900 shadow-lg">
                             {messageErreur}
@@ -124,108 +190,188 @@ if (Astro.request.method === "POST") {
                     )
                 }
 
-                <form
-                    method="POST"
-                    enctype="multipart/form-data"
-                    class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8"
-                >
-                    <div class="grid gap-5 md:grid-cols-2">
-                        <div class="md:col-span-2">
-                            <label
-                                for="Nom"
-                                class="font-text text-body font-semibold text-white"
-                            >
-                                Nom de la scene *
-                            </label>
-                            <input
-                                id="Nom"
-                                name="Nom"
-                                type="text"
-                                value={valeursFormulaire.Nom}
-                                required
-                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
-                            />
+                {
+                    !isConnected ? (
+                        <div class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8">
+                            <h2 class="font-title text-subtitle text-white">
+                                Connexion requise
+                            </h2>
+                            <p class="mt-3 font-text text-body leading-[1.65] text-white/90">
+                                Pour ce projet de cours, toute combinaison email
+                                + mot de passe est acceptee.
+                            </p>
+
+                            <form method="POST" class="mt-6 grid gap-5">
+                                <input type="hidden" name="actionType" value="login" />
+
+                                <div>
+                                    <label
+                                        for="email"
+                                        class="font-text text-body font-semibold text-white"
+                                    >
+                                        Adresse email *
+                                    </label>
+                                    <input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={valeursConnexion.email}
+                                        required
+                                        class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label
+                                        for="password"
+                                        class="font-text text-body font-semibold text-white"
+                                    >
+                                        Mot de passe *
+                                    </label>
+                                    <input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        required
+                                        class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                                    />
+                                </div>
+
+                                <div class="mt-1 flex justify-center">
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3 font-text font-semibold text-primary shadow-lg transition hover:-translate-y-[1px] hover:bg-accent"
+                                    >
+                                        Acceder au formulaire
+                                    </button>
+                                </div>
+                            </form>
                         </div>
+                    ) : (
+                        <>
+                            <div class="mx-auto mt-10 flex w-full max-w-3xl items-center justify-between rounded-2xl border border-white/25 bg-primary-light/35 px-4 py-3 md:px-5">
+                                <p class="font-text text-sm text-white">
+                                    Connecte en tant que
+                                    <span class="font-semibold">{connectedEmail}</span>
+                                </p>
+                                <form method="POST">
+                                    <input type="hidden" name="actionType" value="logout" />
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center gap-2 rounded-xl border border-white/35 bg-white/10 px-4 py-2 font-text text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                                    >
+                                        Se deconnecter
+                                    </button>
+                                </form>
+                            </div>
 
-                        <div class="md:col-span-2">
-                            <label
-                                for="Localisation"
-                                class="font-text text-body font-semibold text-white"
+                            <form
+                                method="POST"
+                                enctype="multipart/form-data"
+                                class="mx-auto mt-5 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8"
                             >
-                                Localisation *
-                            </label>
-                            <input
-                                id="Localisation"
-                                name="Localisation"
-                                type="text"
-                                value={valeursFormulaire.Localisation}
-                                required
-                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
-                            />
-                        </div>
+                                <input type="hidden" name="actionType" value="add" />
 
-                        <div class="md:col-span-2">
-                            <label
-                                for="Description_scene"
-                                class="font-text text-body font-semibold text-white"
-                            >
-                                Description de la scene
-                            </label>
-                            <textarea
-                                id="Description_scene"
-                                name="Description_scene"
-                                rows="5"
-                                class="mt-2 w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
-                            >{valeursFormulaire.Description_scene}</textarea>
-                        </div>
+                                <div class="grid gap-5 md:grid-cols-2">
+                                    <div class="md:col-span-2">
+                                        <label
+                                            for="Nom"
+                                            class="font-text text-body font-semibold text-white"
+                                        >
+                                            Nom de la scene *
+                                        </label>
+                                        <input
+                                            id="Nom"
+                                            name="Nom"
+                                            type="text"
+                                            value={valeursFormulaire.Nom}
+                                            required
+                                            class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                                        />
+                                    </div>
 
-                        <div>
-                            <label
-                                for="Image_scene"
-                                class="font-text text-body font-semibold text-white"
-                            >
-                                Image principale
-                            </label>
-                            <input
-                                id="Image_scene"
-                                name="Image_scene"
-                                type="file"
-                                accept="image/*"
-                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
-                            />
-                        </div>
+                                    <div class="md:col-span-2">
+                                        <label
+                                            for="Localisation"
+                                            class="font-text text-body font-semibold text-white"
+                                        >
+                                            Localisation *
+                                        </label>
+                                        <input
+                                            id="Localisation"
+                                            name="Localisation"
+                                            type="text"
+                                            value={valeursFormulaire.Localisation}
+                                            required
+                                            class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                                        />
+                                    </div>
 
-                        <div>
-                            <label
-                                for="Galerie_scene"
-                                class="font-text text-body font-semibold text-white"
-                            >
-                                Galerie photo
-                            </label>
-                            <input
-                                id="Galerie_scene"
-                                name="Galerie_scene"
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
-                            />
-                        </div>
-                    </div>
+                                    <div class="md:col-span-2">
+                                        <label
+                                            for="Description_scene"
+                                            class="font-text text-body font-semibold text-white"
+                                        >
+                                            Description de la scene
+                                        </label>
+                                        <textarea
+                                            id="Description_scene"
+                                            name="Description_scene"
+                                            rows="5"
+                                            class="mt-2 w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                                        >{valeursFormulaire.Description_scene}</textarea>
+                                    </div>
 
-                    <div class="mt-8 flex flex-col items-center gap-3">
-                        <button
-                            type="submit"
-                            class="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3 font-text font-semibold text-primary shadow-lg transition hover:-translate-y-[1px] hover:bg-accent"
-                        >
-                            Ajouter la scene
-                        </button>
+                                    <div>
+                                        <label
+                                            for="Image_scene"
+                                            class="font-text text-body font-semibold text-white"
+                                        >
+                                            Image principale
+                                        </label>
+                                        <input
+                                            id="Image_scene"
+                                            name="Image_scene"
+                                            type="file"
+                                            accept="image/*"
+                                            class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
+                                        />
+                                    </div>
 
-                        <p class="font-text text-sm text-white/85">
-                            * Champs obligatoires
-                        </p>
-                    </div>
-                </form>
+                                    <div>
+                                        <label
+                                            for="Galerie_scene"
+                                            class="font-text text-body font-semibold text-white"
+                                        >
+                                            Galerie photo
+                                        </label>
+                                        <input
+                                            id="Galerie_scene"
+                                            name="Galerie_scene"
+                                            type="file"
+                                            accept="image/*"
+                                            multiple
+                                            class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="mt-8 flex flex-col items-center gap-3">
+                                    <button
+                                        type="submit"
+                                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3 font-text font-semibold text-primary shadow-lg transition hover:-translate-y-[1px] hover:bg-accent"
+                                    >
+                                        Ajouter la scene
+                                    </button>
+
+                                    <p class="font-text text-sm text-white/85">
+                                        * Champs obligatoires
+                                    </p>
+                                </div>
+                            </form>
+                        </>
+                    )
+                }
             </div>
         </section>
     </section>
