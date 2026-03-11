@@ -28,14 +28,21 @@ const artistesAvecImage = tousLesArtistes.map((artiste) => {
     </section>
 
     <section id="liste-artistes" class="bg-primary pb-16 pt-8">
-        <div class="my-grid">
-            <div class="lg:col-span-4">
+        <div class="my-grid gap-y-8 lg:items-start">
+            <div class="lg:col-span-3 lg:pr-6">
                 <h2 class="text-center font-title text-title text-white lg:text-left">
                     La liste des artistes
                 </h2>
+
+                <p
+                    class="mx-auto mt-5 max-w-md text-center font-text text-body leading-[1.7] text-white/90 lg:mx-0 lg:text-left"
+                >
+                    Parcourez tous les artistes programmés et accédez à leur
+                    fiche complète en un clic.
+                </p>
             </div>
 
-            <div class="mt-10 grid gap-8 md:grid-cols-2 lg:col-span-8 lg:mt-0">
+            <div class="mt-2 grid gap-8 md:grid-cols-2 lg:col-span-9 lg:mt-0 xl:grid-cols-3">
                 {
                     artistesAvecImage.map(({ artiste, imageUrl }) => (
                         <ArtistCard artiste={artiste} imageUrl={imageUrl} />

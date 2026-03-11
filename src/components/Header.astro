@@ -24,117 +24,174 @@ function isActive(href) {
 
 <header
     id="site-header"
-    class="fixed left-0 top-0 z-[100] w-full bg-primary px-7 pb-6 pt-12 transition-transform duration-300 ease-in-out lg:px-10 lg:pb-5 lg:pt-8"
+    class="fixed left-0 top-0 z-[100] w-full bg-primary/95 px-7 pb-6 pt-12 backdrop-blur-sm transition-transform duration-300 ease-in-out lg:px-0 lg:pb-4 lg:pt-5"
 >
-    <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
+    <div class="lg:hidden">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a
+                    href="/404"
+                    aria-label="Instagram"
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                >
+                    <img
+                        src="/images/button-insta.webp"
+                        alt=""
+                        class="h-10 w-10 object-contain"
+                    />
+                </a>
+
+                <a
+                    href="/404"
+                    aria-label="Facebook"
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                >
+                    <img
+                        src="/images/button-facebook.webp"
+                        alt=""
+                        class="h-10 w-10 object-contain"
+                    />
+                </a>
+
+                <a
+                    href="/404"
+                    aria-label="TikTok"
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                >
+                    <img
+                        src="/images/button-tiktok.webp"
+                        alt=""
+                        class="h-10 w-10 object-contain"
+                    />
+                </a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a
+                    href="/404"
+                    aria-label="Billetterie"
+                    class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                >
+                    <img
+                        src="/images/button-ticket.webp"
+                        alt=""
+                        class="h-10 w-10 object-contain"
+                    />
+                </a>
+
+                <button
+                    id="menu-button"
+                    aria-label="Ouvrir le menu"
+                    class="burger-button relative flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                    type="button"
+                >
+                    <span class="burger-lines relative block h-5 w-5">
+                        <span
+                            class="burger-line burger-line-1 absolute left-0 top-0.5 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
+                        ></span>
+                        <span
+                            class="burger-line burger-line-2 absolute left-[25%] top-1/2 block h-[2px] w-[75%] -translate-y-1/2 bg-primary transition-all duration-300 ease-in-out"
+                        ></span>
+                        <span
+                            class="burger-line burger-line-3 absolute bottom-0.5 left-0 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
+                        ></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-10 flex justify-center">
+            <a href="/" aria-label="Retour a l'accueil">
+                <img
+                    src="/svg/logo.svg"
+                    alt="Fanfa' Comtoise du 26 au 28 juin"
+                    class="w-full max-w-[34rem]"
+                />
+            </a>
+        </div>
+    </div>
+
+    <div class="mx-auto hidden w-full max-w-7xl items-center gap-8 lg:flex">
+        <a href="/" aria-label="Accueil" class="shrink-0">
+            <img
+                src="/svg/logo.svg"
+                alt="Fanfa' Comtoise du 26 au 28 juin"
+                class="w-full max-w-[13rem] xl:max-w-[14.5rem]"
+            />
+        </a>
+
+        <nav class="flex-1" aria-label="Navigation principale">
+            <ul class="flex items-center justify-center gap-1 font-text text-base text-white xl:gap-2">
+                {
+                    navLinks.map((link) => (
+                        <li>
+                            <a
+                                href={link.href}
+                                class:list={[
+                                    "inline-flex items-center rounded-full px-3.5 py-2 transition-all duration-200",
+                                    isActive(link.href)
+                                        ? "bg-white text-primary shadow-[0_6px_16px_rgba(0,0,0,0.18)]"
+                                        : "hover:-translate-y-0.5 hover:bg-white/20 hover:text-accent",
+                                ]}
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
+        <div class="flex shrink-0 items-center gap-2.5">
+            <a
+                href="/404"
+                aria-label="Billetterie"
+                class="flex h-11 w-11 items-center justify-center rounded-full bg-white transition-transform duration-200 hover:-translate-y-0.5"
+            >
+                <img
+                    src="/images/button-ticket.webp"
+                    alt=""
+                    class="h-11 w-11 object-contain"
+                />
+            </a>
+
             <a
                 href="/404"
                 aria-label="Instagram"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                class="flex h-11 w-11 items-center justify-center rounded-full bg-white transition-transform duration-200 hover:-translate-y-0.5"
             >
                 <img
                     src="/images/button-insta.webp"
                     alt=""
-                    class="h-10 w-10 object-contain"
+                    class="h-11 w-11 object-contain"
                 />
             </a>
 
             <a
                 href="/404"
                 aria-label="Facebook"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                class="flex h-11 w-11 items-center justify-center rounded-full bg-white transition-transform duration-200 hover:-translate-y-0.5"
             >
                 <img
                     src="/images/button-facebook.webp"
                     alt=""
-                    class="h-10 w-10 object-contain"
+                    class="h-11 w-11 object-contain"
                 />
             </a>
 
             <a
                 href="/404"
                 aria-label="TikTok"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+                class="flex h-11 w-11 items-center justify-center rounded-full bg-white transition-transform duration-200 hover:-translate-y-0.5"
             >
                 <img
                     src="/images/button-tiktok.webp"
                     alt=""
-                    class="h-10 w-10 object-contain"
+                    class="h-11 w-11 object-contain"
                 />
             </a>
         </div>
-
-        <div class="flex items-center gap-4">
-            <a
-                href="/404"
-                aria-label="Billetterie"
-                class="flex h-10 w-10 items-center justify-center rounded-full bg-white"
-            >
-                <img
-                    src="/images/button-ticket.webp"
-                    alt=""
-                    class="h-10 w-10 object-contain"
-                />
-            </a>
-
-            <button
-                id="menu-button"
-                aria-label="Ouvrir le menu"
-                class="burger-button relative flex h-10 w-10 items-center justify-center rounded-full bg-white lg:hidden"
-                type="button"
-            >
-                <span class="burger-lines relative block h-5 w-5">
-                    <span
-                        class="burger-line burger-line-1 absolute left-0 top-0.5 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
-                    ></span>
-                    <span
-                        class="burger-line burger-line-2 absolute left-[25%] top-1/2 block h-[2px] w-[75%] -translate-y-1/2 bg-primary transition-all duration-300 ease-in-out"
-                    ></span>
-                    <span
-                        class="burger-line burger-line-3 absolute bottom-0.5 left-0 block h-[2px] w-full bg-primary transition-all duration-300 ease-in-out"
-                    ></span>
-                </span>
-            </button>
-        </div>
     </div>
-
-    <div class="mt-10 flex justify-center lg:mt-6">
-        <a href="/" aria-label="Retour a l'accueil">
-            <img
-                src="/svg/logo.svg"
-                alt="Fanfa' Comtoise du 26 au 28 juin"
-                class="w-full max-w-[34rem] lg:max-w-[26rem]"
-            />
-        </a>
-    </div>
-
-    <nav
-        class="mt-8 hidden lg:block"
-        aria-label="Navigation principale"
-    >
-        <ul
-            class="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 font-text text-[1.05rem] text-white"
-        >
-            {
-                navLinks.map((link) => (
-                    <li>
-                        <a
-                            href={link.href}
-                            class:list={[
-                                "rounded-full px-4 py-1.5 transition-colors duration-200",
-                                isActive(link.href)
-                                    ? "bg-white text-primary"
-                                    : "hover:bg-white/20",
-                            ]}
-                        >
-                            {link.label}
-                        </a>
-                    </li>
-                ))
-            }
-        </ul>
-    </nav>
 
     <MenuMobile />
 </header>

@@ -23,18 +23,23 @@ const infos = [
 ];
 ---
 
-<section class="bg-primary pb-14 pt-5">
-    <div class="my-grid">
-        <div class="lg:col-span-4">
+<section class="bg-primary pb-16 pt-6">
+    <div class="my-grid gap-y-8 lg:items-start">
+        <div class="lg:col-span-4 lg:pr-6">
             <h2 class="text-center font-title text-title text-white lg:text-left">
                 Les infos pratiques
             </h2>
+
+            <p class="mx-auto mt-5 max-w-md text-center font-text text-body leading-[1.7] text-white/90 lg:mx-0 lg:text-left">
+                Retrouvez rapidement les informations utiles pour préparer votre
+                venue au festival.
+            </p>
         </div>
 
-        <div class="mt-7 flex flex-col gap-7 lg:col-span-8 lg:mt-0">
+        <div class="mt-2 flex flex-col gap-4 lg:col-span-8 lg:mt-0">
             {
                 infos.map((info, index) => (
-                    <article class="accordion-item border-b border-white/90 pb-4">
+                    <article class="accordion-item rounded-2xl border border-white/20 bg-primary-light/15 px-5 py-5">
                         <button
                             class="accordion-button flex w-full items-center justify-between gap-4 text-left"
                             type="button"
@@ -54,7 +59,7 @@ const infos = [
                         </button>
 
                         <div
-                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-64 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
+                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-80 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
                         >
                             {info.titre === "FAQ" ? (
                                 <p class="font-text text-body leading-[1.6] text-white">
@@ -113,7 +118,7 @@ const infos = [
 
                 currentButton.setAttribute("aria-expanded", "false");
                 currentContent.classList.remove(
-                    "max-h-64",
+                    "max-h-80",
                     "pt-5",
                     "opacity-100",
                 );
@@ -124,7 +129,7 @@ const infos = [
             if (!isOpen) {
                 button.setAttribute("aria-expanded", "true");
                 content.classList.remove("max-h-0", "pt-0", "opacity-0");
-                content.classList.add("max-h-64", "pt-5", "opacity-100");
+                content.classList.add("max-h-80", "pt-5", "opacity-100");
                 icon.classList.add("rotate-180");
             }
         });

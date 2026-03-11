@@ -4,7 +4,7 @@ const { scene, imageUrl } = Astro.props;
 const titre = scene.Localisation || scene.Nom;
 ---
 
-<article class="group relative overflow-hidden rounded-3xl shadow-xl transition-shadow duration-300 hover:shadow-2xl">
+<article class="group relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-white/20 transition-shadow duration-300 hover:shadow-2xl">
     <a
         href={`/scenes/${scene.id}`}
         aria-label={`Voir le détail de ${titre}`}
@@ -13,7 +13,7 @@ const titre = scene.Localisation || scene.Nom;
         <img
             src={imageUrl}
             alt={titre}
-            class="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] md:h-60 lg:h-64"
+            class="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] md:h-60 lg:h-64"
         />
 
         <div
@@ -23,7 +23,7 @@ const titre = scene.Localisation || scene.Nom;
 
         <div class="absolute bottom-4 left-5 right-5">
             <h3
-                class="font-title text-2xl leading-[1.05] text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.35)]"
+                class="font-title text-2xl leading-[1.05] text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.35)] lg:text-[1.9rem]"
             >
                 {titre}
             </h3>

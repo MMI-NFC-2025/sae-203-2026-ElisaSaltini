@@ -121,7 +121,7 @@
     }
 
     .my-grid {
-        @apply mx-auto w-full max-w-7xl px-6;
+        @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
     }
 
     @media (min-width: 1024px) {

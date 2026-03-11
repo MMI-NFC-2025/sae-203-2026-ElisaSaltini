@@ -2,22 +2,22 @@
 const { image, title, date } = Astro.props;
 ---
 
-<article class="relative overflow-hidden rounded-3xl shadow-xl">
+<article class="group relative overflow-hidden rounded-3xl shadow-xl ring-1 ring-white/15 transition-shadow duration-300 hover:shadow-2xl">
     <img
         src={image}
         alt={title}
-        class="h-48 w-full object-cover md:h-56 lg:h-64"
+        class="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] md:h-56 lg:h-64 xl:h-72"
     />
 
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
+    <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent">
     </div>
 
-    <div class="absolute bottom-4 left-5">
-        <h3 class="font-title text-2xl text-accent">
+    <div class="absolute bottom-4 left-5 right-5">
+        <h3 class="font-title text-2xl text-accent lg:text-[1.9rem]">
             {title}
         </h3>
 
-        <p class="font-text text-white text-sm">
+        <p class="mt-1 font-text text-sm text-white/95">
             {date}
         </p>
     </div>

@@ -3,16 +3,21 @@ import ProgramCard from "./ProgramCard.astro";
 ---
 
 <section id="programme" class="bg-primary pb-15 pt-0">
-    <div class="my-grid">
-        <div class="lg:col-span-4 lg:pt-2">
+    <div class="my-grid gap-y-8 lg:items-start">
+        <div class="lg:col-span-4 lg:pt-2 lg:pr-6">
             <h2 class="mb-8 text-center font-title text-title text-white lg:mb-10 lg:text-left">
                 Aperçu de La Prog'
             </h2>
 
-            <div class="hidden lg:flex">
+            <p class="mx-auto max-w-md text-center font-text text-body leading-[1.7] text-white/90 lg:mx-0 lg:text-left">
+                Les premières têtes d'affiche de cette édition sont déjà là.
+                Parcourez un aperçu rapide du week-end.
+            </p>
+
+            <div class="hidden lg:mt-8 lg:flex">
                 <a
                     href="/programme"
-                    class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                    class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg transition-transform duration-200 hover:-translate-y-0.5"
                 >
                     Accéder à la prog'
                     <span class="text-lg">↗</span>
@@ -20,7 +25,7 @@ import ProgramCard from "./ProgramCard.astro";
             </div>
         </div>
 
-        <div class="space-y-7 lg:col-span-8 lg:space-y-6">
+        <div class="space-y-7 lg:col-span-8 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 xl:grid-cols-3">
             <ProgramCard
                 image="/images/image1home.webp"
                 title="Ozma"

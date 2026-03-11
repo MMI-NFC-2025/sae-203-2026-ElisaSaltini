@@ -11,85 +11,96 @@ import ProgrammeHero from "../components/ProgrammeHero.astro";
     </section>
 
     <section id="programme-content" class="bg-primary pb-16 pt-8">
-        <div class="my-grid">
-            <div class="lg:col-span-4 lg:pt-2">
-                <div class="flex justify-center lg:justify-start">
+        <div class="my-grid gap-y-8 lg:items-start">
+            <div class="lg:col-span-4 lg:pr-6">
+                <h2 class="text-center font-title text-title text-white lg:text-left">
+                    Le programme complet
+                </h2>
+
+                <p class="mx-auto mt-5 max-w-md text-center font-text text-body leading-[1.7] text-white/90 lg:mx-0 lg:text-left">
+                    Retrouvez la programmation jour par jour et préparez votre
+                    parcours sur les différentes scènes du festival.
+                </p>
+
+                <div class="mt-8 flex justify-center lg:justify-start">
                     <a
                         href="https://ton-lien-externe-ici.com"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg transition-transform duration-200 hover:-translate-y-0.5"
                     >
                         Télécharger la prog' ↗
                     </a>
                 </div>
             </div>
 
-            <div class="mt-12 lg:col-span-8 lg:mt-0">
-                <div class="space-y-8">
-                    <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 text-center lg:px-8 lg:text-left">
+            <div class="mt-2 space-y-6 lg:col-span-8 lg:mt-0">
+                <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 lg:px-8">
+                    <div class="lg:grid lg:grid-cols-12 lg:gap-6">
                         <h2
-                            class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:text-left"
+                            class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:col-span-5 lg:text-left"
                         >
                             Vendredi 26 Juin 2026
                         </h2>
 
-                        <p class="mt-8 font-text text-[1.4rem] text-accent">
-                            Scène Place Saint-Martin
-                        </p>
+                        <div class="mt-6 text-center lg:col-span-7 lg:mt-0 lg:text-left">
+                            <p class="font-text text-[1.4rem] text-accent">
+                                Scène Place Saint-Martin
+                            </p>
 
-                        <p class="mt-2 font-text text-body leading-[1.5] text-white">
-                            La Cédille - Ozma - Abigoba -
-                            <br />
-                            Minoritaire - Borruto Family
-                        </p>
-                    </article>
+                            <p class="mt-2 font-text text-body leading-[1.6] text-white">
+                                La Cédille - Ozma - Abigoba - Minoritaire -
+                                Borruto Family
+                            </p>
+                        </div>
+                    </div>
+                </article>
 
-                    <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 text-center lg:px-8 lg:text-left">
+                <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 lg:px-8">
+                    <div class="lg:grid lg:grid-cols-12 lg:gap-6">
                         <h2
-                            class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:text-left"
+                            class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:col-span-5 lg:text-left"
                         >
-                            Samedi 27 Juin
-                            <br />
-                            2026
+                            Samedi 27 Juin 2026
                         </h2>
 
-                        <p class="mt-8 font-text text-[1.4rem] text-accent">
-                            Place Albert Thomas
-                        </p>
+                        <div class="mt-6 text-center lg:col-span-7 lg:mt-0 lg:text-left">
+                            <p class="font-text text-[1.4rem] text-accent">
+                                Place Albert Thomas
+                            </p>
 
-                        <p class="mt-2 font-text text-body leading-[1.5] text-white">
-                            Fanfare les 5 Fantastiques - Batterie
-                            <br />
-                            Fanfare Municipale de Mâcon - Buck
-                            <br />
-                            - Wiho & The Free Radical
-                        </p>
-                    </article>
+                            <p class="mt-2 font-text text-body leading-[1.6] text-white">
+                                Fanfare les 5 Fantastiques - Batterie Fanfare
+                                Municipale de Mâcon - Buck - Wiho & The Free
+                                Radical
+                            </p>
+                        </div>
+                    </div>
+                </article>
 
-                    <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 text-center lg:px-8 lg:text-left">
-                        <h2 class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:text-left">
+                <article class="rounded-3xl border border-white/20 bg-primary-light/15 px-6 py-7 lg:px-8">
+                    <div class="lg:grid lg:grid-cols-12 lg:gap-6">
+                        <h2 class="text-center font-title text-[2.55rem] font-semibold leading-[0.95] text-white lg:col-span-5 lg:text-left">
                             Dimanche 28 Juin 2026
                         </h2>
 
-                        <p class="mt-8 font-text text-[1.4rem] text-accent">
-                            Place Denfert Rochereau
-                        </p>
+                        <div class="mt-6 text-center lg:col-span-7 lg:mt-0 lg:text-left">
+                            <p class="font-text text-[1.4rem] text-accent">
+                                Place Denfert Rochereau
+                            </p>
 
-                        <p class="mt-2 font-text text-body leading-[1.5] text-white">
-                            Ibrahim Maalouf - Émile Parisien -
-                            <br />
-                            Médéric Collignon - Boulou Ferré -
-                            <br />
-                            Louis Sclavis
-                        </p>
-                    </article>
-                </div>
+                            <p class="mt-2 font-text text-body leading-[1.6] text-white">
+                                Ibrahim Maalouf - Émile Parisien - Médéric
+                                Collignon - Boulou Ferré - Louis Sclavis
+                            </p>
+                        </div>
+                    </div>
+                </article>
 
                 <div class="mt-12 flex justify-center lg:justify-start">
                     <a
                         href="/404"
-                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                        class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg transition-transform duration-200 hover:-translate-y-0.5"
                     >
                         Accéder à la billetterie ↗
                     </a>
