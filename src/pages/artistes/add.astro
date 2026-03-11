@@ -1,7 +1,7 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import { createArtiste, getScenesByName } from "../../backend/backend.mjs";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { createArtiste, getScenesByName } from "../../../backend/backend.mjs";
 
 const scenes = await getScenesByName();
 
