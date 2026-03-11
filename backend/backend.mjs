@@ -5,6 +5,24 @@ import PocketBase from "pocketbase";
 
 const pb = new PocketBase("http://127.0.0.1:8090");
 
+function formatPocketBaseFieldErrors(error) {
+    const fieldErrors = error?.response?.data;
+
+    if (!fieldErrors || typeof fieldErrors !== "object") {
+        return "";
+    }
+
+    return Object.entries(fieldErrors)
+        .map(([field, details]) => {
+            const fieldMessage =
+                details && typeof details === "object" && "message" in details
+                    ? details.message
+                    : "valeur invalide";
+            return `${field}: ${fieldMessage}`;
+        })
+        .join(" | ");
+}
+
 
 // 1. Retourne la liste de tous les artistes triés par date de représentation
 export async function getArtistesByDate() {
@@ -117,7 +135,25 @@ export async function getArtistesBySceneName(nomScene) {
 }
 
 
-// 8. Permet d'ajouter ou modifier un artiste
+// 8. Permet d'ajouter un artiste
+export async function createArtiste(newData) {
+    try {
+        const data = await pb.collection("Artistes").create(newData);
+        return data;
+    } catch (error) {
+        const details = formatPocketBaseFieldErrors(error);
+        const status = error?.status ? `HTTP ${error.status}` : "HTTP ?";
+        const fallbackMessage =
+            error?.response?.message || error?.message || "Erreur inconnue";
+        const message = details || fallbackMessage;
+
+        console.log("Une erreur est survenue", error);
+        throw new Error(`PocketBase refuse la creation (${status}) : ${message}`);
+    }
+}
+
+
+// 9. Permet de modifier un artiste
 export async function updateArtiste(id, newData) {
     try {
         const data = await pb.collection("Artistes").update(id, newData);
@@ -129,7 +165,7 @@ export async function updateArtiste(id, newData) {
 }
 
 
-// 9. Permet d'ajouter ou modifier une scène
+// 10. Permet de modifier une scène
 export async function updateScene(id, newData) {
     try {
         const data = await pb.collection("Scenes").update(id, newData);
@@ -151,7 +187,7 @@ export async function createScene(newData) {
 }
 
 
-// 10. Utilitaire pour récupérer l'URL d'une image PocketBase
+// 11. Utilitaire pour récupérer l'URL d'une image PocketBase
 export function getImageUrl(record, recordImage) {
     return pb.files.getURL(record, recordImage);
 }

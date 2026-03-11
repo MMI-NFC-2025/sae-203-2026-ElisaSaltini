@@ -8,93 +8,173 @@ const scenes = await getScenesByName();
 let messageSucces = "";
 let messageErreur = "";
 
+const valeursFormulaire = {
+    Nom: "",
+    Debut_representation: "",
+    Fin_representation: "",
+    Description: "",
+    Genre_musical: "",
+    Scene_associee: "",
+    Favori: "false",
+};
+
 function formatDateTimeForPocketBase(dateValue) {
     if (!dateValue) {
         return "";
     }
 
-    return `${dateValue.replace("T", " ")}:00`;
+    const parsedDate = new Date(dateValue);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+        return "";
+    }
+
+    return parsedDate.toISOString().replace("T", " ");
+}
+
+function buildErrorMessage(error) {
+    const baseMessage = error?.message?.toString().trim();
+
+    if (!baseMessage) {
+        return "PocketBase a refuse l'ajout de l'artiste.";
+    }
+
+    if (baseMessage.includes("HTTP 403")) {
+        return `${baseMessage}. Verifie la Create rule de la collection Artistes.`;
+    }
+
+    return baseMessage;
 }
 
 if (Astro.request.method === "POST") {
     try {
         const formData = await Astro.request.formData();
 
-        const nom = formData.get("Nom")?.toString().trim();
-        const debut = formData.get("Debut_representation")?.toString().trim();
-        const fin = formData.get("Fin_representation")?.toString().trim();
-        const description = formData.get("Description")?.toString().trim();
-        const genre = formData.get("Genre_musical")?.toString().trim();
-        const sceneAssociee = formData.get("Scene_associee")?.toString().trim();
-        const favori = formData.get("Favori")?.toString().trim();
+        valeursFormulaire.Nom = formData.get("Nom")?.toString().trim() || "";
+        valeursFormulaire.Debut_representation =
+            formData.get("Debut_representation")?.toString().trim() || "";
+        valeursFormulaire.Fin_representation =
+            formData.get("Fin_representation")?.toString().trim() || "";
+        valeursFormulaire.Description =
+            formData.get("Description")?.toString().trim() || "";
+        valeursFormulaire.Genre_musical =
+            formData.get("Genre_musical")?.toString().trim() || "";
+        valeursFormulaire.Scene_associee =
+            formData.get("Scene_associee")?.toString().trim() || "";
+        valeursFormulaire.Favori =
+            formData.get("Favori")?.toString().trim() || "false";
+
         const imageArtiste = formData.get("Image_artiste");
         const galerieArtiste = formData.getAll("Galerie_artiste");
 
-        if (!nom || !debut || !fin || !sceneAssociee || !genre) {
+        if (
+            !valeursFormulaire.Nom ||
+            !valeursFormulaire.Debut_representation ||
+            !valeursFormulaire.Fin_representation ||
+            !valeursFormulaire.Genre_musical ||
+            !valeursFormulaire.Scene_associee
+        ) {
             messageErreur = "Merci de remplir tous les champs obligatoires.";
         } else {
-            const data = new FormData();
-
-            data.append("Nom", nom);
-            data.append(
-                "Debut_representation",
-                formatDateTimeForPocketBase(debut),
+            const debutDate = new Date(valeursFormulaire.Debut_representation);
+            const finDate = new Date(valeursFormulaire.Fin_representation);
+            const debutFormatte = formatDateTimeForPocketBase(
+                valeursFormulaire.Debut_representation,
             );
-            data.append("Fin_representation", formatDateTimeForPocketBase(fin));
-            data.append("Description", description || "");
-            data.append("Genre_musical", genre);
-            data.append("Scene_associee", sceneAssociee);
-            data.append("Favori", favori === "true" ? "true" : "false");
+            const finFormatte = formatDateTimeForPocketBase(
+                valeursFormulaire.Fin_representation,
+            );
 
-            if (imageArtiste && imageArtiste.size > 0) {
-                data.append("Image_artiste", imageArtiste);
-            }
-
-            galerieArtiste.forEach((image) => {
-                if (image && image.size > 0) {
-                    data.append("Galerie_artiste", image);
-                }
-            });
-
-            const created = await createArtiste(data);
-
-            if (created) {
-                messageSucces = "L’artiste a bien été ajouté dans PocketBase.";
-            } else {
+            if (!debutFormatte || !finFormatte) {
                 messageErreur =
-                    "L’ajout a échoué. Vérifie surtout la règle Create de la collection Artistes dans PocketBase, puis les noms exacts des champs.";
+                    "Format de date invalide. Utilise le selecteur date/heure.";
+            } else if (
+                Number.isNaN(debutDate.getTime()) ||
+                Number.isNaN(finDate.getTime()) ||
+                finDate <= debutDate
+            ) {
+                messageErreur =
+                    "L'heure de fin doit etre strictement apres l'heure de debut.";
+            } else {
+                const payload = {
+                    Nom: valeursFormulaire.Nom,
+                    Debut_representation: debutFormatte,
+                    Fin_representation: finFormatte,
+                    Description: valeursFormulaire.Description,
+                    Genre_musical: valeursFormulaire.Genre_musical,
+                    Scene_associee: valeursFormulaire.Scene_associee,
+                    Favori: valeursFormulaire.Favori === "true",
+                };
+
+                if (imageArtiste instanceof File && imageArtiste.size > 0) {
+                    payload.Image_artiste = imageArtiste;
+                }
+
+                const galerieValide = galerieArtiste.filter(
+                    (entry) => entry instanceof File && entry.size > 0,
+                );
+
+                if (galerieValide.length > 0) {
+                    payload.Galerie_artiste = galerieValide;
+                }
+
+                const created = await createArtiste(payload);
+
+                if (created?.id) {
+                    messageSucces =
+                        "L'artiste a bien ete ajoute dans PocketBase.";
+                    valeursFormulaire.Nom = "";
+                    valeursFormulaire.Debut_representation = "";
+                    valeursFormulaire.Fin_representation = "";
+                    valeursFormulaire.Description = "";
+                    valeursFormulaire.Genre_musical = "";
+                    valeursFormulaire.Scene_associee = "";
+                    valeursFormulaire.Favori = "false";
+                } else {
+                    messageErreur =
+                        "L'ajout a echoue. Verifie les champs et la Create rule.";
+                }
             }
         }
     } catch (error) {
-        console.log("Une erreur est survenue", error);
-        messageErreur =
-            "Une erreur est survenue pendant l’envoi du formulaire.";
+        console.log("Une erreur est survenue pendant la creation", error);
+        messageErreur = buildErrorMessage(error);
     }
 }
 ---
 
 <Layout titre="Ajouter un artiste">
-    <section class="min-h-screen bg-primary">
+    <section class="relative min-h-screen overflow-hidden bg-primary pb-16">
         <Header />
 
-        <section class="px-6 pb-16 pt-[16rem]">
+        <div class="pointer-events-none absolute inset-0 opacity-15">
+            <img
+                src="/images/confettis.webp"
+                alt=""
+                class="h-full w-full object-cover"
+            />
+        </div>
+
+        <section class="relative px-6 pb-10 pt-[16rem]">
             <div class="mx-auto w-full max-w-4xl">
-                <div class="text-center">
-                    <h1 class="font-title text-title text-white">
+                <div
+                    class="rounded-[2rem] border border-white/25 bg-primary-light/20 p-6 text-center shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-8"
+                >
+                    <h1 class="font-title text-title text-white md:text-[2.7rem]">
                         Ajouter un artiste
                     </h1>
 
                     <p
                         class="mx-auto mt-4 max-w-2xl font-text text-body leading-[1.7] text-white/90"
                     >
-                        Cette page permet d’ajouter un artiste directement dans
-                        PocketBase.
+                        Cette page envoie un formulaire POST vers PocketBase pour
+                        creer un enregistrement dans la collection Artistes.
                     </p>
                 </div>
 
                 {
                     messageSucces && (
-                        <div class="mx-auto mt-8 max-w-2xl rounded-2xl bg-white px-6 py-4 text-center font-text text-primary shadow-lg">
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/20 bg-white px-6 py-4 text-center font-text text-primary shadow-lg">
                             {messageSucces}
                         </div>
                     )
@@ -102,7 +182,7 @@ if (Astro.request.method === "POST") {
 
                 {
                     messageErreur && (
-                        <div class="mx-auto mt-8 max-w-2xl rounded-2xl bg-accent px-6 py-4 text-center font-text text-black shadow-lg">
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-red-400/60 bg-red-100 px-6 py-4 text-center font-text text-red-900 shadow-lg">
                             {messageErreur}
                         </div>
                     )
@@ -111,139 +191,187 @@ if (Astro.request.method === "POST") {
                 <form
                     method="POST"
                     enctype="multipart/form-data"
-                    class="mx-auto mt-10 max-w-3xl rounded-[2rem] bg-primary-light/90 p-6 shadow-[0_12px_30px_rgba(0,0,0,0.18)] md:p-8"
+                    class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8"
                 >
                     <div class="grid gap-5 md:grid-cols-2">
                         <div class="md:col-span-2">
                             <label
                                 for="Nom"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
-                                Nom de l’artiste
+                                Nom de l'artiste *
                             </label>
                             <input
                                 id="Nom"
                                 name="Nom"
                                 type="text"
+                                value={valeursFormulaire.Nom}
                                 required
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             />
                         </div>
 
                         <div>
                             <label
                                 for="Debut_representation"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
-                                Début de représentation
+                                Debut de representation *
                             </label>
                             <input
                                 id="Debut_representation"
                                 name="Debut_representation"
                                 type="datetime-local"
+                                value={valeursFormulaire.Debut_representation}
                                 required
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             />
                         </div>
 
                         <div>
                             <label
                                 for="Fin_representation"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
-                                Fin de représentation
+                                Fin de representation *
                             </label>
                             <input
                                 id="Fin_representation"
                                 name="Fin_representation"
                                 type="datetime-local"
+                                value={valeursFormulaire.Fin_representation}
                                 required
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             />
                         </div>
 
                         <div>
                             <label
                                 for="Genre_musical"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
-                                Genre musical
+                                Genre musical *
                             </label>
                             <select
                                 id="Genre_musical"
                                 name="Genre_musical"
                                 required
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             >
-                                <option value="">Choisir un genre</option>
-                                <option value="Fanfare">Fanfare</option>
-                                <option value="Musique du monde">
+                                <option
+                                    value=""
+                                    selected={valeursFormulaire.Genre_musical === ""}
+                                >
+                                    Choisir un genre
+                                </option>
+                                <option
+                                    value="Fanfare"
+                                    selected={valeursFormulaire.Genre_musical === "Fanfare"}
+                                >
+                                    Fanfare
+                                </option>
+                                <option
+                                    value="Musique du monde"
+                                    selected={valeursFormulaire.Genre_musical === "Musique du monde"}
+                                >
                                     Musique du monde
                                 </option>
-                                <option value="Jazz">Jazz</option>
+                                <option
+                                    value="Jazz"
+                                    selected={valeursFormulaire.Genre_musical === "Jazz"}
+                                >
+                                    Jazz
+                                </option>
                             </select>
                         </div>
 
                         <div>
                             <label
                                 for="Scene_associee"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
-                                Scène associée
+                                Scene associee *
                             </label>
                             <select
                                 id="Scene_associee"
                                 name="Scene_associee"
                                 required
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             >
-                                <option value="">Choisir une scène</option>
+                                <option
+                                    value=""
+                                    selected={valeursFormulaire.Scene_associee === ""}
+                                >
+                                    Choisir une scene
+                                </option>
                                 {
                                     scenes.map((scene) => (
-                                        <option value={scene.id}>
+                                        <option
+                                            value={scene.id}
+                                            selected={valeursFormulaire.Scene_associee === scene.id}
+                                        >
                                             {scene.Localisation || scene.Nom}
                                         </option>
                                     ))
                                 }
                             </select>
+                            {
+                                scenes.length === 0 && (
+                                    <p class="mt-2 font-text text-sm text-accent">
+                                        Aucune scene disponible: impossible de
+                                        creer un artiste sans relation
+                                        Scene_associee.
+                                    </p>
+                                )
+                            }
                         </div>
 
                         <div>
                             <label
                                 for="Favori"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
                                 Favori
                             </label>
                             <select
                                 id="Favori"
                                 name="Favori"
-                                class="mt-2 h-12 w-full rounded-xl border-0 bg-white px-4 font-text text-primary outline-none"
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
                             >
-                                <option value="false">Non</option>
-                                <option value="true">Oui</option>
+                                <option
+                                    value="false"
+                                    selected={valeursFormulaire.Favori === "false"}
+                                >
+                                    Non
+                                </option>
+                                <option
+                                    value="true"
+                                    selected={valeursFormulaire.Favori === "true"}
+                                >
+                                    Oui
+                                </option>
                             </select>
                         </div>
 
                         <div class="md:col-span-2">
                             <label
                                 for="Description"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
                                 Description
                             </label>
                             <textarea
                                 id="Description"
                                 name="Description"
-                                rows="6"
-                                class="mt-2 w-full rounded-xl border-0 bg-white px-4 py-3 font-text text-primary outline-none"
-                            ></textarea>
+                                rows="5"
+                                class="mt-2 w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                            >{valeursFormulaire.Description}</textarea>
                         </div>
 
                         <div>
                             <label
                                 for="Image_artiste"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
                                 Image principale
                             </label>
@@ -252,14 +380,14 @@ if (Astro.request.method === "POST") {
                                 name="Image_artiste"
                                 type="file"
                                 accept="image/*"
-                                class="mt-2 block w-full rounded-xl bg-white px-4 py-3 font-text text-primary"
+                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
                             />
                         </div>
 
                         <div>
                             <label
                                 for="Galerie_artiste"
-                                class="font-text text-body font-medium text-white"
+                                class="font-text text-body font-semibold text-white"
                             >
                                 Galerie photo
                             </label>
@@ -269,18 +397,22 @@ if (Astro.request.method === "POST") {
                                 type="file"
                                 accept="image/*"
                                 multiple
-                                class="mt-2 block w-full rounded-xl bg-white px-4 py-3 font-text text-primary"
+                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
                             />
                         </div>
                     </div>
 
-                    <div class="mt-8 flex justify-center">
+                    <div class="mt-8 flex flex-col items-center gap-3">
                         <button
                             type="submit"
-                            class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                            class="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3 font-text font-semibold text-primary shadow-lg transition hover:-translate-y-[1px] hover:bg-accent"
                         >
-                            Ajouter l’artiste
+                            Ajouter l'artiste
                         </button>
+
+                        <p class="font-text text-sm text-white/85">
+                            * Champs obligatoires
+                        </p>
                     </div>
                 </form>
             </div>
