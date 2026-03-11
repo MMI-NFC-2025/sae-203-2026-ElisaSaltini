@@ -1,79 +1,110 @@
-﻿---
+﻿<section id="contact-content" class="bg-primary py-14 sm:py-16 lg:py-20">
+    <div class="mx-auto w-full max-w-5xl px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl text-center">
+            <h2 class="font-title text-title text-white">Formulaire de contact</h2>
 
----
-
-<section id="contact-content" class="bg-primary pb-16 pt-8">
-    <div class="my-grid">
-        <div class="lg:col-span-4 lg:pt-1">
-            <h2 class="text-center font-title text-title text-white lg:text-left">
-                Formulaire de
-                <br />
-                contact
-            </h2>
+            <p class="mt-4 font-text text-body leading-[1.7] text-white/90">
+                Une question, une demande de partenariat ou un besoin
+                d'information ? Ecrivez-nous et nous vous repondrons au plus
+                vite.
+            </p>
         </div>
 
-        <form class="mt-10 lg:col-span-8 lg:mt-0">
-            <div class="grid grid-cols-2 gap-3">
+        <form class="mx-auto mt-10 w-full max-w-4xl lg:mt-12">
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-x-6 md:gap-y-6">
                 <div>
                     <label
                         for="prenom"
-                        class="font-text text-subtitle text-white"
+                        class="font-text text-title-small font-semibold text-white"
                     >
-                        Prénom
+                        Prenom
                     </label>
                     <input
                         id="prenom"
                         name="prenom"
                         type="text"
-                        class="mt-2 h-12 w-full rounded-md border-0 bg-white px-3 font-text text-primary outline-none"
+                        autocomplete="given-name"
+                        placeholder="Votre prenom"
+                        class="mt-2 h-12 w-full rounded-lg border border-white/35 bg-white px-4 font-text text-primary placeholder:text-primary/60 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/60"
                     />
                 </div>
 
                 <div>
-                    <label for="nom" class="font-text text-subtitle text-white">
+                    <label
+                        for="nom"
+                        class="font-text text-title-small font-semibold text-white"
+                    >
                         Nom
                     </label>
                     <input
                         id="nom"
                         name="nom"
                         type="text"
-                        class="mt-2 h-12 w-full rounded-md border-0 bg-white px-3 font-text text-primary outline-none"
+                        autocomplete="family-name"
+                        placeholder="Votre nom"
+                        class="mt-2 h-12 w-full rounded-lg border border-white/35 bg-white px-4 font-text text-primary placeholder:text-primary/60 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/60"
                     />
+                </div>
+
+                <div class="md:col-span-2">
+                    <label
+                        for="email"
+                        class="font-text text-title-small font-semibold text-white"
+                    >
+                        E-mail
+                    </label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        autocomplete="email"
+                        placeholder="votre-email@exemple.com"
+                        class="mt-2 h-12 w-full rounded-lg border border-white/35 bg-white px-4 font-text text-primary placeholder:text-primary/60 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/60"
+                    />
+                </div>
+
+                <div class="md:col-span-2">
+                    <label
+                        for="message"
+                        class="font-text text-title-small font-semibold text-white"
+                    >
+                        Message
+                    </label>
+                    <textarea
+                        id="message"
+                        name="message"
+                        rows="7"
+                        placeholder="Votre message"
+                        class="mt-2 w-full rounded-lg border border-white/35 bg-white px-4 py-3 font-text text-primary placeholder:text-primary/60 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/60"
+                    ></textarea>
                 </div>
             </div>
 
-            <div class="mt-4">
-                <label for="email" class="font-text text-subtitle text-white">
-                    E-Mail
-                </label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    class="mt-2 h-12 w-full rounded-md border-0 bg-white px-3 font-text text-primary outline-none"
-                />
-            </div>
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <p class="font-text text-sm leading-relaxed text-white/80">
+                    Merci de remplir les champs pour recevoir une reponse.
+                </p>
 
-            <div class="mt-4">
-                <label for="message" class="font-text text-subtitle text-white">
-                    Message
-                </label>
-                <textarea
-                    id="message"
-                    name="message"
-                    rows="7"
-                    class="mt-2 w-full rounded-md border-0 bg-white px-3 py-3 font-text text-primary outline-none"
-                ></textarea>
-            </div>
-
-            <div class="mt-4 flex justify-center lg:justify-start">
                 <button
                     type="submit"
-                    class="rounded-lg bg-primary-light px-10 py-3 font-text text-[1.75rem] font-semibold text-primary"
+                    class="inline-flex w-full items-center justify-center rounded-lg bg-white px-8 py-3 font-text text-body font-semibold text-primary transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent/70 sm:w-auto"
                 >
-                    Envoyer
+                    Envoyer le message
                 </button>
             </div>
         </form>
+
+        <div class="mx-auto mt-12 max-w-4xl border-t border-white/25 pt-6">
+            <div
+                class="flex flex-col items-center justify-between gap-2 text-center sm:flex-row sm:text-left"
+            >
+                <p class="font-text text-body text-white/90">
+                    contact@fanfacomtoise.fr
+                </p>
+                <p class="font-text text-body text-white/75">
+                    Lun. - Ven. 9h00 - 18h00
+                </p>
+            </div>
+        </div>
     </div>
 </section>
