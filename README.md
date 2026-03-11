@@ -10,4 +10,4 @@ URL : https://sae203.saltini.optimiseus.fr/_/
 
 Note : je n'ai pas de nom de domaine, j'ai seulement celui donner par le prof et je l'ai utiliser pour le pocketbase. De ce fait, je n'ai pas utiliser le cname et le site se trouve uniquement sur Netlify
 
-Pour entrer dans les pages add, n'importe quel mot de passe et adresse mail fonctionne, il n'y a pas de systeme de compte
+Pour entrer dans les pages add, n'importe quel mot de passe et adresse mail fonctionne, il n'y a pas de systeme de compte.
