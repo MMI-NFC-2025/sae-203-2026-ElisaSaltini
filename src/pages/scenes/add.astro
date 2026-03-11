@@ -1,0 +1,232 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { createScene } from "../../../backend/backend.mjs";
+
+let messageSucces = "";
+let messageErreur = "";
+
+const valeursFormulaire = {
+    Nom: "",
+    Localisation: "",
+    Description_scene: "",
+};
+
+function buildErrorMessage(error) {
+    const baseMessage = error?.message?.toString().trim();
+
+    if (!baseMessage) {
+        return "PocketBase a refuse l'ajout de la scene.";
+    }
+
+    if (baseMessage.includes("HTTP 403")) {
+        return `${baseMessage}. Verifie la Create rule de la collection Scenes.`;
+    }
+
+    return baseMessage;
+}
+
+if (Astro.request.method === "POST") {
+    try {
+        const formData = await Astro.request.formData();
+
+        valeursFormulaire.Nom = formData.get("Nom")?.toString().trim() || "";
+        valeursFormulaire.Localisation =
+            formData.get("Localisation")?.toString().trim() || "";
+        valeursFormulaire.Description_scene =
+            formData.get("Description_scene")?.toString().trim() || "";
+
+        const imageScene = formData.get("Image_scene");
+        const galerieScene = formData.getAll("Galerie_scene");
+
+        if (!valeursFormulaire.Nom || !valeursFormulaire.Localisation) {
+            messageErreur = "Merci de remplir tous les champs obligatoires.";
+        } else {
+            const payload = {
+                Nom: valeursFormulaire.Nom,
+                Localisation: valeursFormulaire.Localisation,
+                Description_scene: valeursFormulaire.Description_scene,
+            };
+
+            if (imageScene instanceof File && imageScene.size > 0) {
+                payload.Image_scene = imageScene;
+            }
+
+            const galerieValide = galerieScene.filter(
+                (entry) => entry instanceof File && entry.size > 0,
+            );
+
+            if (galerieValide.length > 0) {
+                payload.Galerie_scene = galerieValide;
+            }
+
+            const created = await createScene(payload);
+
+            if (created?.id) {
+                messageSucces = "La scene a bien ete ajoutee dans PocketBase.";
+                valeursFormulaire.Nom = "";
+                valeursFormulaire.Localisation = "";
+                valeursFormulaire.Description_scene = "";
+            } else {
+                messageErreur =
+                    "L'ajout a echoue. Verifie les champs et la Create rule.";
+            }
+        }
+    } catch (error) {
+        console.log("Une erreur est survenue pendant la creation", error);
+        messageErreur = buildErrorMessage(error);
+    }
+}
+---
+
+<Layout titre="Ajouter une scene">
+    <section class="relative min-h-screen overflow-hidden bg-primary pb-16">
+        <Header />
+
+        <div class="pointer-events-none absolute inset-0 opacity-15">
+            <img
+                src="/images/confettis.webp"
+                alt=""
+                class="h-full w-full object-cover"
+            />
+        </div>
+
+        <section class="relative px-6 pb-10 pt-[16rem]">
+            <div class="mx-auto w-full max-w-4xl">
+                <div
+                    class="rounded-[2rem] border border-white/25 bg-primary-light/20 p-6 text-center shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-8"
+                >
+                    <h1 class="font-title text-title text-white md:text-[2.7rem]">
+                        Ajouter une scene
+                    </h1>
+
+                    <p
+                        class="mx-auto mt-4 max-w-2xl font-text text-body leading-[1.7] text-white/90"
+                    >
+                        Cette page envoie un formulaire POST vers PocketBase pour
+                        creer un enregistrement dans la collection Scenes.
+                    </p>
+                </div>
+
+                {
+                    messageSucces && (
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/20 bg-white px-6 py-4 text-center font-text text-primary shadow-lg">
+                            {messageSucces}
+                        </div>
+                    )
+                }
+
+                {
+                    messageErreur && (
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-red-400/60 bg-red-100 px-6 py-4 text-center font-text text-red-900 shadow-lg">
+                            {messageErreur}
+                        </div>
+                    )
+                }
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8"
+                >
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div class="md:col-span-2">
+                            <label
+                                for="Nom"
+                                class="font-text text-body font-semibold text-white"
+                            >
+                                Nom de la scene *
+                            </label>
+                            <input
+                                id="Nom"
+                                name="Nom"
+                                type="text"
+                                value={valeursFormulaire.Nom}
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                            />
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label
+                                for="Localisation"
+                                class="font-text text-body font-semibold text-white"
+                            >
+                                Localisation *
+                            </label>
+                            <input
+                                id="Localisation"
+                                name="Localisation"
+                                type="text"
+                                value={valeursFormulaire.Localisation}
+                                required
+                                class="mt-2 h-12 w-full rounded-xl border border-white/20 bg-white px-4 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                            />
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label
+                                for="Description_scene"
+                                class="font-text text-body font-semibold text-white"
+                            >
+                                Description de la scene
+                            </label>
+                            <textarea
+                                id="Description_scene"
+                                name="Description_scene"
+                                rows="5"
+                                class="mt-2 w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/50"
+                            >{valeursFormulaire.Description_scene}</textarea>
+                        </div>
+
+                        <div>
+                            <label
+                                for="Image_scene"
+                                class="font-text text-body font-semibold text-white"
+                            >
+                                Image principale
+                            </label>
+                            <input
+                                id="Image_scene"
+                                name="Image_scene"
+                                type="file"
+                                accept="image/*"
+                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                for="Galerie_scene"
+                                class="font-text text-body font-semibold text-white"
+                            >
+                                Galerie photo
+                            </label>
+                            <input
+                                id="Galerie_scene"
+                                name="Galerie_scene"
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                class="mt-2 block w-full rounded-xl border border-white/20 bg-white px-4 py-3 font-text text-primary file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex flex-col items-center gap-3">
+                        <button
+                            type="submit"
+                            class="inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3 font-text font-semibold text-primary shadow-lg transition hover:-translate-y-[1px] hover:bg-accent"
+                        >
+                            Ajouter la scene
+                        </button>
+
+                        <p class="font-text text-sm text-white/85">
+                            * Champs obligatoires
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+</Layout>

@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import ArtistCarousel from "../../components/ArtistCarousel.astro";
+import FavoriteStar from "../../components/FavoriteStar.astro";
 import { getArtiste, getImageUrl } from "../../../backend/backend.mjs";
 
 const { id } = Astro.params;
@@ -60,6 +61,8 @@ const nomScene =
     artiste.expand?.Scene_associee?.Localisation ||
     artiste.expand?.Scene_associee?.Nom ||
     "";
+
+const isFavori = artiste.Favori === true;
 ---
 
 <Layout titre={artiste.Nom}>
@@ -87,11 +90,19 @@ const nomScene =
                 </a>
 
                 <div class="mt-8 max-w-3xl">
-                    <h1
-                        class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
-                    >
-                        {artiste.Nom}
-                    </h1>
+                    <div class="flex items-start justify-between gap-4">
+                        <h1
+                            class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
+                        >
+                            {artiste.Nom}
+                        </h1>
+
+                        <FavoriteStar
+                            artisteId={artiste.id}
+                            isFavori={isFavori}
+                            className="mt-1 h-12 w-12 shrink-0"
+                        />
+                    </div>
 
                     <p class="mt-6 font-text text-body text-white">
                         Le {dateCapitalisee}

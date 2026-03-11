@@ -1,0 +1,125 @@
+---
+const {
+    artisteId,
+    isFavori = false,
+    className = "",
+} = Astro.props;
+---
+
+<button
+    type="button"
+    class={`group inline-flex items-center justify-center rounded-full border border-white/55 bg-black/35 text-white backdrop-blur-md shadow-[0_8px_18px_rgba(0,0,0,0.35)] transition-all duration-200 ease-out hover:scale-105 hover:bg-black/45 hover:shadow-[0_12px_24px_rgba(0,0,0,0.38)] active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 ${className}`}
+    aria-label={isFavori ? "Retirer des favoris" : "Ajouter aux favoris"}
+    aria-pressed={isFavori ? "true" : "false"}
+    data-favorite-button
+    data-artiste-id={artisteId}
+    data-favori={isFavori ? "true" : "false"}
+>
+    <span
+        class={`pointer-events-none text-[1.45rem] leading-none transition-all duration-200 ${isFavori ? "hidden" : "scale-100"}`}
+        data-star-empty
+        aria-hidden="true"
+    >
+        &#9734;
+    </span>
+    <span
+        class={`pointer-events-none text-[1.45rem] leading-none text-accent transition-all duration-200 ${isFavori ? "scale-110" : "hidden scale-100"}`}
+        data-star-filled
+        aria-hidden="true"
+    >
+        &#9733;
+    </span>
+</button>
+
+<script>
+    //@ts-nocheck
+
+    const favoriteButtons = document.querySelectorAll("[data-favorite-button]");
+
+    function renderFavoriteState(button, isFavorite) {
+        const emptyStar = button.querySelector("[data-star-empty]");
+        const filledStar = button.querySelector("[data-star-filled]");
+
+        button.dataset.favori = isFavorite ? "true" : "false";
+        button.setAttribute("aria-pressed", isFavorite ? "true" : "false");
+        button.setAttribute(
+            "aria-label",
+            isFavorite ? "Retirer des favoris" : "Ajouter aux favoris",
+        );
+
+        button.classList.toggle("ring-2", isFavorite);
+        button.classList.toggle("ring-accent/70", isFavorite);
+        button.classList.toggle("bg-black/55", isFavorite);
+
+        if (emptyStar && filledStar) {
+            emptyStar.classList.toggle("hidden", isFavorite);
+            filledStar.classList.toggle("hidden", !isFavorite);
+            filledStar.classList.toggle("scale-110", isFavorite);
+            filledStar.classList.toggle("scale-100", !isFavorite);
+        }
+    }
+
+    favoriteButtons.forEach((button) => {
+        if (button.dataset.favoriteReady === "true") {
+            return;
+        }
+
+        button.dataset.favoriteReady = "true";
+        renderFavoriteState(button, button.dataset.favori === "true");
+
+        button.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (button.dataset.loading === "true") {
+                return;
+            }
+
+            const artisteId = button.dataset.artisteId;
+
+            if (!artisteId) {
+                return;
+            }
+
+            const currentValue = button.dataset.favori === "true";
+            const nextValue = !currentValue;
+
+            button.dataset.loading = "true";
+            button.disabled = true;
+
+            renderFavoriteState(button, nextValue);
+            button.classList.add("scale-110");
+
+            try {
+                const response = await fetch("/api/artistes/favorite", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: artisteId,
+                        favori: nextValue,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const payload = await response.json().catch(() => null);
+                    throw new Error(
+                        payload?.error ||
+                            "Impossible de mettre a jour le favori.",
+                    );
+                }
+            } catch (error) {
+                console.log("Erreur mise a jour favori", error);
+                renderFavoriteState(button, currentValue);
+            } finally {
+                setTimeout(() => {
+                    button.classList.remove("scale-110");
+                }, 160);
+
+                button.dataset.loading = "false";
+                button.disabled = false;
+            }
+        });
+    });
+</script>

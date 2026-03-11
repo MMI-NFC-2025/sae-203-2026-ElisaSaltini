@@ -202,8 +202,14 @@ export async function createScene(newData) {
         const data = await pb.collection("Scenes").create(newData);
         return data;
     } catch (error) {
+        const details = formatPocketBaseFieldErrors(error);
+        const status = error?.status ? `HTTP ${error.status}` : "HTTP ?";
+        const fallbackMessage =
+            error?.response?.message || error?.message || "Erreur inconnue";
+        const message = details || fallbackMessage;
+
         console.log("Une erreur est survenue", error);
-        return null;
+        throw new Error(`PocketBase refuse la creation (${status}) : ${message}`);
     }
 }
 
