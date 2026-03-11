@@ -164,8 +164,29 @@ export async function updateArtiste(id, newData) {
     }
 }
 
+// 10. Met à jour uniquement le champ Favori d'un artiste
+export async function setFavoriteArtiste(id, valeurFavori) {
+    try {
+        const data = await pb.collection("Artistes").update(id, {
+            Favori: valeurFavori === true,
+        });
+        return data;
+    } catch (error) {
+        const details = formatPocketBaseFieldErrors(error);
+        const status = error?.status ? `HTTP ${error.status}` : "HTTP ?";
+        const fallbackMessage =
+            error?.response?.message || error?.message || "Erreur inconnue";
+        const message = details || fallbackMessage;
 
-// 10. Permet de modifier une scène
+        console.log("Une erreur est survenue", error);
+        throw new Error(
+            `PocketBase refuse la mise a jour du favori (${status}) : ${message}`,
+        );
+    }
+}
+
+
+// 11. Permet de modifier une scène
 export async function updateScene(id, newData) {
     try {
         const data = await pb.collection("Scenes").update(id, newData);
@@ -187,7 +208,7 @@ export async function createScene(newData) {
 }
 
 
-// 11. Utilitaire pour récupérer l'URL d'une image PocketBase
+// 12. Utilitaire pour récupérer l'URL d'une image PocketBase
 export function getImageUrl(record, recordImage) {
     return pb.files.getURL(record, recordImage);
 }

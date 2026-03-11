@@ -1,8 +1,9 @@
 ---
 const { artiste, imageUrl } = Astro.props;
+const isFavori = artiste.Favori === true;
 ---
 
-<article class="overflow-hidden rounded-2xl bg-white p-2 shadow-md md:p-3">
+<article class="relative overflow-hidden rounded-2xl bg-white p-2 shadow-md md:p-3">
     <a href={`/artistes/${artiste.id}`} class="block">
         <img
             src={imageUrl}
@@ -16,4 +17,102 @@ const { artiste, imageUrl } = Astro.props;
             </h3>
         </div>
     </a>
+
+    <button
+        type="button"
+        class="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-primary/80 text-white shadow-lg backdrop-blur-sm transition hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70"
+        aria-label="Basculer en favori"
+        aria-pressed={isFavori ? "true" : "false"}
+        data-favorite-button
+        data-artiste-id={artiste.id}
+        data-favori={isFavori ? "true" : "false"}
+    >
+        <span
+            class={`text-[1.45rem] leading-none ${isFavori ? "hidden" : ""}`}
+            data-star-empty
+            aria-hidden="true"
+        >
+            &#9734;
+        </span>
+        <span
+            class={`text-[1.45rem] leading-none text-accent ${isFavori ? "" : "hidden"}`}
+            data-star-filled
+            aria-hidden="true"
+        >
+            &#9733;
+        </span>
+    </button>
 </article>
+
+<script>
+    //@ts-nocheck
+
+    const favoriteButtons = document.querySelectorAll("[data-favorite-button]");
+
+    function renderFavoriteState(button, isFavorite) {
+        const emptyStar = button.querySelector("[data-star-empty]");
+        const filledStar = button.querySelector("[data-star-filled]");
+
+        button.dataset.favori = isFavorite ? "true" : "false";
+        button.setAttribute("aria-pressed", isFavorite ? "true" : "false");
+
+        if (emptyStar && filledStar) {
+            emptyStar.classList.toggle("hidden", isFavorite);
+            filledStar.classList.toggle("hidden", !isFavorite);
+        }
+    }
+
+    favoriteButtons.forEach((button) => {
+        renderFavoriteState(button, button.dataset.favori === "true");
+
+        button.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (button.dataset.loading === "true") {
+                return;
+            }
+
+            const artisteId = button.dataset.artisteId;
+
+            if (!artisteId) {
+                return;
+            }
+
+            const currentValue = button.dataset.favori === "true";
+            const nextValue = !currentValue;
+
+            button.dataset.loading = "true";
+            button.disabled = true;
+
+            renderFavoriteState(button, nextValue);
+
+            try {
+                const response = await fetch("/api/artistes/favorite", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id: artisteId,
+                        favori: nextValue,
+                    }),
+                });
+
+                if (!response.ok) {
+                    const payload = await response.json().catch(() => null);
+                    throw new Error(
+                        payload?.error ||
+                            "Impossible de mettre a jour le favori.",
+                    );
+                }
+            } catch (error) {
+                console.log("Erreur mise a jour favori", error);
+                renderFavoriteState(button, currentValue);
+            } finally {
+                button.dataset.loading = "false";
+                button.disabled = false;
+            }
+        });
+    });
+</script>
