@@ -1,4 +1,4 @@
----
+﻿---
 const partenaires = [
     { nom: "Ville de Montbéliard", image: "/svg/montbeliard-ville.svg" },
     { nom: "Pays de Montbéliard Agglomération", image: "/svg/pma.svg" },
@@ -13,16 +13,18 @@ const partenaires = [
 ];
 ---
 
-<section class="bg-primary px-6 pt-0 pb-14">
-    <div class="mx-auto max-w-md">
-        <h2 class="font-title text-title text-center text-white">
-            Nos partenaires
-        </h2>
+<section class="bg-primary pb-14 pt-0">
+    <div class="my-grid">
+        <div class="lg:col-span-4">
+            <h2 class="text-center font-title text-title text-white lg:text-left">
+                Nos partenaires
+            </h2>
+        </div>
 
-        <div class="mt-6 grid grid-cols-2 gap-x-7 gap-y-6">
+        <div class="mt-6 grid grid-cols-2 gap-x-7 gap-y-6 lg:col-span-8 lg:mt-0 lg:grid-cols-3">
             {
                 partenaires.map((partenaire) => (
-                    <article class="flex h-[5.6rem] items-center justify-center rounded-lg bg-primary-light px-4">
+                    <article class="flex h-[5.6rem] items-center justify-center rounded-lg bg-primary-light px-4 lg:h-24">
                         <img
                             src={partenaire.image}
                             alt={partenaire.nom}

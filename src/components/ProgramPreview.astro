@@ -1,39 +1,53 @@
----
+﻿---
 import ProgramCard from "./ProgramCard.astro";
 ---
 
-<section id="programme" class="bg-primary px-6 pt-0 pb-15">
-    <h2 class="font-title text-title text-center text-white mb-8">
-        Aperçu de La Prog’
-    </h2>
+<section id="programme" class="bg-primary pb-15 pt-0">
+    <div class="my-grid">
+        <div class="lg:col-span-4 lg:pt-2">
+            <h2 class="mb-8 text-center font-title text-title text-white lg:mb-10 lg:text-left">
+                Aperçu de La Prog'
+            </h2>
 
-    <div class="space-y-7">
-        <ProgramCard
-            image="/images/image1home.webp"
-            title="Ozma"
-            date="Vendredi 26 Juin 2026"
-        />
+            <div class="hidden lg:flex">
+                <a
+                    href="/programme"
+                    class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+                >
+                    Accéder à la prog'
+                    <span class="text-lg">↗</span>
+                </a>
+            </div>
+        </div>
 
-        <ProgramCard
-            image="/images/image2home.webp"
-            title="Ibrahim Maalouf"
-            date="Samedi 27 Juin 2026"
-        />
+        <div class="space-y-7 lg:col-span-8 lg:space-y-6">
+            <ProgramCard
+                image="/images/image1home.webp"
+                title="Ozma"
+                date="Vendredi 26 Juin 2026"
+            />
 
-        <ProgramCard
-            image="/images/image3home.webp"
-            title="Buck"
-            date="Dimanche 28 Juin 2026"
-        />
-    </div>
+            <ProgramCard
+                image="/images/image2home.webp"
+                title="Ibrahim Maalouf"
+                date="Samedi 27 Juin 2026"
+            />
 
-    <div class="flex justify-center mt-8">
-        <a
-            href="/programme"
-            class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
-        >
-            Accéder à la prog’
-            <span class="text-lg">↗</span>
-        </a>
+            <ProgramCard
+                image="/images/image3home.webp"
+                title="Buck"
+                date="Dimanche 28 Juin 2026"
+            />
+        </div>
+
+        <div class="mt-8 flex justify-center lg:hidden">
+            <a
+                href="/programme"
+                class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"
+            >
+                Accéder à la prog'
+                <span class="text-lg">↗</span>
+            </a>
+        </div>
     </div>
 </section>

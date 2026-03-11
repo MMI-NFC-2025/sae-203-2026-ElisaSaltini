@@ -1,4 +1,4 @@
----
+﻿---
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import ArtistesHero from "../../components/ArtistesHero.astro";
@@ -27,13 +27,15 @@ const artistesAvecImage = tousLesArtistes.map((artiste) => {
         <ArtistesHero />
     </section>
 
-    <section id="liste-artistes" class="bg-primary px-6 pb-16 pt-8">
-        <div class="mx-auto w-full max-w-5xl">
-            <h2 class="font-title text-title text-center text-white">
-                La liste des artistes
-            </h2>
+    <section id="liste-artistes" class="bg-primary pb-16 pt-8">
+        <div class="my-grid">
+            <div class="lg:col-span-4">
+                <h2 class="text-center font-title text-title text-white lg:text-left">
+                    La liste des artistes
+                </h2>
+            </div>
 
-            <div class="mt-10 grid gap-8 md:grid-cols-2">
+            <div class="mt-10 grid gap-8 md:grid-cols-2 lg:col-span-8 lg:mt-0">
                 {
                     artistesAvecImage.map(({ artiste, imageUrl }) => (
                         <ArtistCard artiste={artiste} imageUrl={imageUrl} />

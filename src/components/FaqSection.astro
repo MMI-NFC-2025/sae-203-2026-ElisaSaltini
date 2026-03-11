@@ -1,9 +1,9 @@
----
+﻿---
 const questions = [
     {
-        titre: "L’accès au festival est-il payant ?",
+        titre: "L'accès au festival est-il payant ?",
         contenu:
-            "Non, l’accès au festival est gratuit. Vous pouvez profiter librement des concerts et des animations proposées dans le centre-ville.",
+            "Non, l'accès au festival est gratuit. Vous pouvez profiter librement des concerts et des animations proposées dans le centre-ville.",
     },
     {
         titre: "Où se déroulent les concerts ?",
@@ -21,9 +21,9 @@ const questions = [
             "Vous pouvez venir à pied, en transports en commun, en voiture ou à vélo. Nous vous conseillons de privilégier les déplacements doux et les transports du réseau local.",
     },
     {
-        titre: "Y a-t-il des solutions d’hébergement ?",
+        titre: "Y a-t-il des solutions d'hébergement ?",
         contenu:
-            "Oui, plusieurs hôtels, logements et hébergements sont disponibles autour de Montbéliard. Pensez à réserver à l’avance pendant la période du festival.",
+            "Oui, plusieurs hôtels, logements et hébergements sont disponibles autour de Montbéliard. Pensez à réserver à l'avance pendant la période du festival.",
     },
     {
         titre: "Puis-je venir avec des enfants ?",
@@ -33,13 +33,15 @@ const questions = [
 ];
 ---
 
-<section id="faq-content" class="bg-primary px-6 pt-5 pb-14">
-    <div class="mx-auto max-w-md">
-        <h2 class="font-title text-title text-center text-white">
-            Les questions fréquentes
-        </h2>
+<section id="faq-content" class="bg-primary pb-14 pt-5">
+    <div class="my-grid">
+        <div class="lg:col-span-4">
+            <h2 class="text-center font-title text-title text-white lg:text-left">
+                Les questions fréquentes
+            </h2>
+        </div>
 
-        <div class="mt-7 flex flex-col gap-7">
+        <div class="mt-7 flex flex-col gap-7 lg:col-span-8 lg:mt-0">
             {
                 questions.map((question, index) => (
                     <article class="accordion-item border-b border-white/90 pb-4">
@@ -62,7 +64,7 @@ const questions = [
                         </button>
 
                         <div
-                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-48 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
+                            class={`accordion-content overflow-hidden transition-all duration-300 ease-in-out ${index === 0 ? "max-h-64 pt-5 opacity-100" : "max-h-0 pt-0 opacity-0"}`}
                         >
                             <p class="font-text text-body leading-[1.6] text-white">
                                 {question.contenu}
@@ -108,7 +110,7 @@ const questions = [
 
                 currentButton.setAttribute("aria-expanded", "false");
                 currentContent.classList.remove(
-                    "max-h-48",
+                    "max-h-64",
                     "pt-5",
                     "opacity-100",
                 );
@@ -119,7 +121,7 @@ const questions = [
             if (!isOpen) {
                 button.setAttribute("aria-expanded", "true");
                 content.classList.remove("max-h-0", "pt-0", "opacity-0");
-                content.classList.add("max-h-48", "pt-5", "opacity-100");
+                content.classList.add("max-h-64", "pt-5", "opacity-100");
                 icon.classList.add("rotate-180");
             }
         });

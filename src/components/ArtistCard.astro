@@ -5,13 +5,13 @@ const { artiste, imageUrl } = Astro.props;
 const isFavori = artiste.Favori === true;
 ---
 
-<article class="group relative overflow-hidden rounded-2xl bg-white p-2 shadow-md md:p-3">
+<article class="group relative overflow-hidden rounded-2xl bg-white p-2 shadow-md transition-shadow duration-300 hover:shadow-xl md:p-3">
     <a href={`/artistes/${artiste.id}`} class="block">
         <div class="relative overflow-hidden rounded-xl">
             <img
                 src={imageUrl}
                 alt={artiste.Nom}
-                class="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] md:h-60"
+                class="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02] md:h-60 lg:h-64"
             />
             <div
                 class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/28 via-transparent to-transparent"
@@ -28,6 +28,6 @@ const isFavori = artiste.Favori === true;
     <FavoriteStar
         artisteId={artiste.id}
         isFavori={isFavori}
-        className="absolute right-4 top-4 z-20 h-11 w-11"
+        className="absolute right-3 top-3 z-20 h-11 w-11 md:right-4 md:top-4"
     />
 </article>

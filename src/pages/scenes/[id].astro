@@ -1,4 +1,4 @@
----
+﻿---
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import ArtistCarousel from "../../components/ArtistCarousel.astro";
@@ -53,27 +53,29 @@ const nomScene = scene.Localisation || scene.Nom;
     <section class="min-h-screen bg-primary">
         <Header />
 
-        <section class="px-6 pb-14 pt-[16rem] md:pt-[14rem]">
-            <div class="mx-auto w-full max-w-5xl">
-                <a
-                    href="/scenes"
-                    aria-label="Retour à la liste des scènes"
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-white"
-                >
-                    <span class="relative block h-6 w-6">
-                        <span
-                            class="absolute left-[18%] top-1/2 block h-[3px] w-[65%] -translate-y-1/2 rounded-full bg-primary"
-                        ></span>
-                        <span
-                            class="absolute left-[18%] top-[31%] block h-[3px] w-[45%] -rotate-45 rounded-full bg-primary"
-                        ></span>
-                        <span
-                            class="absolute left-[18%] top-[63%] block h-[3px] w-[45%] rotate-45 rounded-full bg-primary"
-                        ></span>
-                    </span>
-                </a>
+        <section class="pb-14 pt-[16rem] md:pt-[14rem]">
+            <div class="my-grid">
+                <div class="lg:col-span-12">
+                    <a
+                        href="/scenes"
+                        aria-label="Retour à la liste des scènes"
+                        class="flex h-12 w-12 items-center justify-center rounded-full bg-white"
+                    >
+                        <span class="relative block h-6 w-6">
+                            <span
+                                class="absolute left-[18%] top-1/2 block h-[3px] w-[65%] -translate-y-1/2 rounded-full bg-primary"
+                            ></span>
+                            <span
+                                class="absolute left-[18%] top-[31%] block h-[3px] w-[45%] -rotate-45 rounded-full bg-primary"
+                            ></span>
+                            <span
+                                class="absolute left-[18%] top-[63%] block h-[3px] w-[45%] rotate-45 rounded-full bg-primary"
+                            ></span>
+                        </span>
+                    </a>
+                </div>
 
-                <div class="mt-8 max-w-3xl">
+                <div class="mt-8 lg:col-span-5 lg:mt-10">
                     <h1
                         class="font-text text-[3rem] font-semibold leading-[1.08] text-white"
                     >
@@ -91,7 +93,7 @@ const nomScene = scene.Localisation || scene.Nom;
 
                 {
                     imagePrincipale && (
-                        <div class="mt-10 overflow-hidden rounded-[2.2rem]">
+                        <div class="mt-10 overflow-hidden rounded-[2.2rem] lg:col-span-7 lg:mt-10">
                             <img
                                 src={imagePrincipale}
                                 alt={nomScene}
@@ -101,7 +103,7 @@ const nomScene = scene.Localisation || scene.Nom;
                     )
                 }
 
-                <section class="max-w-3xl pt-12 md:pt-14">
+                <section class="max-w-3xl pt-12 md:pt-14 lg:col-span-8 lg:max-w-none">
                     <h2
                         class="font-text text-[1.75rem] font-semibold text-white"
                     >
@@ -117,12 +119,12 @@ const nomScene = scene.Localisation || scene.Nom;
 
                 {
                     artistesAvecImage.length > 0 && (
-                        <section class="pt-12 md:pt-14">
+                        <section class="pt-12 md:pt-14 lg:col-span-12">
                             <h2 class="font-text text-title font-semibold text-white">
                                 Les artistes sur cette scène
                             </h2>
 
-                            <div class="mt-8 grid gap-8 md:grid-cols-2">
+                            <div class="mt-8 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
                                 {artistesAvecImage.map(
                                     ({ artiste, imageUrl }) => (
                                         <ArtistCard
@@ -136,7 +138,7 @@ const nomScene = scene.Localisation || scene.Nom;
                     )
                 }
 
-                <section class="pt-12 md:pt-14">
+                <section class="pt-12 md:pt-14 lg:col-span-12">
                     <h2 class="font-text text-title font-semibold text-white">
                         La Galerie Photo
                     </h2>
@@ -146,9 +148,9 @@ const nomScene = scene.Localisation || scene.Nom;
 
         <ArtistCarousel images={galerieImages} nomArtiste={nomScene} />
 
-        <section class="bg-primary px-6 pb-16 pt-10">
-            <div class="mx-auto w-full max-w-5xl">
-                <div class="flex justify-center">
+        <section class="bg-primary pb-16 pt-10">
+            <div class="my-grid">
+                <div class="flex justify-center lg:col-span-12">
                     <a
                         href="/scenes"
                         class="inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3 font-text text-primary shadow-lg"

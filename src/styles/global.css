@@ -119,4 +119,14 @@
     .page-container {
         @apply mx-auto w-full max-w-md px-6;
     }
+
+    .my-grid {
+        @apply mx-auto w-full max-w-7xl px-6;
+    }
+
+    @media (min-width: 1024px) {
+        .my-grid {
+            @apply grid grid-cols-12 gap-x-8;
+        }
+    }
 }

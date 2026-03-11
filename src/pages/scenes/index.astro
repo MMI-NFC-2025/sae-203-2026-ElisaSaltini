@@ -1,4 +1,4 @@
----
+﻿---
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import ScenesHero from "../../components/ScenesHero.astro";
@@ -27,20 +27,22 @@ const scenesAvecImage = toutesLesScenes.map((scene) => {
         <ScenesHero />
     </section>
 
-    <section id="liste-scenes" class="bg-primary px-6 pt-8 pb-16">
-        <div class="mx-auto w-full max-w-5xl">
-            <h2 class="font-title text-title text-center text-white">
-                La liste des scènes
-            </h2>
+    <section id="liste-scenes" class="bg-primary pb-16 pt-8">
+        <div class="my-grid">
+            <div class="lg:col-span-4">
+                <h2 class="text-center font-title text-title text-white lg:text-left">
+                    La liste des scènes
+                </h2>
 
-            <p
-                class="mx-auto mt-4 max-w-2xl text-center font-text text-body leading-[1.7] text-white/90"
-            >
-                Cliquez sur une image pour l’ouvrir en grand et mieux découvrir
-                chaque lieu du festival.
-            </p>
+                <p
+                    class="mx-auto mt-4 max-w-2xl text-center font-text text-body leading-[1.7] text-white/90 lg:mx-0 lg:text-left"
+                >
+                    Cliquez sur une image pour l'ouvrir en grand et mieux découvrir
+                    chaque lieu du festival.
+                </p>
+            </div>
 
-            <div class="mt-10 grid gap-8 md:grid-cols-2">
+            <div class="mt-10 grid gap-8 md:grid-cols-2 lg:col-span-8 lg:mt-0">
                 {
                     scenesAvecImage.map(({ scene, imageUrl }) => (
                         <SceneCard scene={scene} imageUrl={imageUrl} />

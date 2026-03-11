@@ -212,10 +212,10 @@ if (Astro.request.method === "POST") {
             />
         </div>
 
-        <section class="relative px-6 pb-10 pt-[16rem]">
-            <div class="mx-auto w-full max-w-4xl">
+        <section class="relative pb-10 pt-[16rem]">
+            <div class="my-grid">
                 <div
-                    class="rounded-[2rem] border border-white/25 bg-primary-light/20 p-6 text-center shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-8"
+                    class="rounded-[2rem] border border-white/25 bg-primary-light/20 p-6 text-center shadow-[0_18px_40px_rgba(0,0,0,0.25)] md:p-8 lg:col-span-10 lg:col-start-2"
                 >
                     <h1 class="font-title text-title text-white md:text-[2.7rem]">
                         Ajouter un artiste
@@ -231,7 +231,7 @@ if (Astro.request.method === "POST") {
 
                 {
                     messageSucces && (
-                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/20 bg-white px-6 py-4 text-center font-text text-primary shadow-lg">
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/20 bg-white px-6 py-4 text-center font-text text-primary shadow-lg lg:col-span-10 lg:col-start-2">
                             {messageSucces}
                         </div>
                     )
@@ -239,7 +239,7 @@ if (Astro.request.method === "POST") {
 
                 {
                     messageInfo && (
-                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/25 bg-primary-light/40 px-6 py-4 text-center font-text text-white shadow-lg">
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-white/25 bg-primary-light/40 px-6 py-4 text-center font-text text-white shadow-lg lg:col-span-10 lg:col-start-2">
                             {messageInfo}
                         </div>
                     )
@@ -247,7 +247,7 @@ if (Astro.request.method === "POST") {
 
                 {
                     messageErreur && (
-                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-red-400/60 bg-red-100 px-6 py-4 text-center font-text text-red-900 shadow-lg">
+                        <div class="mx-auto mt-8 max-w-3xl rounded-2xl border border-red-400/60 bg-red-100 px-6 py-4 text-center font-text text-red-900 shadow-lg lg:col-span-10 lg:col-start-2">
                             {messageErreur}
                         </div>
                     )
@@ -255,7 +255,7 @@ if (Astro.request.method === "POST") {
 
                 {
                     !isConnected ? (
-                        <div class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8">
+                        <div class="mx-auto mt-10 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8 lg:col-span-10 lg:col-start-2">
                             <h2 class="font-title text-subtitle text-white">
                                 Connexion requise
                             </h2>
@@ -312,7 +312,7 @@ if (Astro.request.method === "POST") {
                         </div>
                     ) : (
                         <>
-                            <div class="mx-auto mt-10 flex w-full max-w-3xl items-center justify-between rounded-2xl border border-white/25 bg-primary-light/35 px-4 py-3 md:px-5">
+                            <div class="mx-auto mt-10 flex w-full max-w-3xl items-center justify-between rounded-2xl border border-white/25 bg-primary-light/35 px-4 py-3 md:px-5 lg:col-span-10 lg:col-start-2">
                                 <p class="font-text text-sm text-white">
                                     Connecte en tant que
                                     <span class="font-semibold">{connectedEmail}</span>
@@ -331,7 +331,7 @@ if (Astro.request.method === "POST") {
                             <form
                                 method="POST"
                                 enctype="multipart/form-data"
-                                class="mx-auto mt-5 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8"
+                                class="mx-auto mt-5 max-w-3xl rounded-[2rem] border border-white/25 bg-primary-light/85 p-6 shadow-[0_16px_36px_rgba(0,0,0,0.25)] backdrop-blur-[1px] md:p-8 lg:col-span-10 lg:col-start-2"
                             >
                                 <input type="hidden" name="actionType" value="add" />
 
